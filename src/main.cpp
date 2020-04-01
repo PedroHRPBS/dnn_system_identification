@@ -4,6 +4,8 @@
 #include "ROSUnit_ControlOutputSubscriber.hpp"
 #include "IdentificationNode.hpp"
 #include "MsgReceiver.hpp"
+#include "ROSUnit_Factory.hpp"
+#include "ROSUnit_OrientationSubscriber.hpp"
 
 int main(int argc, char** argv) {
 
@@ -12,9 +14,37 @@ int main(int argc, char** argv) {
     ros::Rate rate(400);
 
     ROSUnit* ros_controloutput_sub = new ROSUnit_ControlOutputSubscriber(nh);
+    //TODO remove this, it's only for testing. I have no bag file with the new topic for roll
+    ROSUnit* ros_orientation_sub = new ROSUnit_OrientationSubscriber(nh);
+
+
+    ROSUnit_Factory ROSUnit_Factory_main{nh};
+    ROSUnit* rosunit_x_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
+                                                                    ROSUnit_msg_type::ROSUnit_Point,
+                                                                    "/providers/x");
+    ROSUnit* rosunit_y_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
+                                                                    ROSUnit_msg_type::ROSUnit_Point,
+                                                                    "/providers/y");
+    ROSUnit* rosunit_z_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
+                                                                    ROSUnit_msg_type::ROSUnit_Point,
+                                                                    "/providers/z");
+    ROSUnit* rosunit_roll_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
+                                                                    ROSUnit_msg_type::ROSUnit_Point,
+                                                                    "/providers/roll");
+    ROSUnit* rosunit_pitch_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
+                                                                    ROSUnit_msg_type::ROSUnit_Point,
+                                                                    "/providers/pitch");
+    ROSUnit* rosunit_yaw_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
+                                                                    ROSUnit_msg_type::ROSUnit_Point,
+                                                                    "/providers/yaw");
+    ROSUnit* rosunit_yaw_rate_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
+                                                                    ROSUnit_msg_type::ROSUnit_Point,
+                                                                    "/providers/yaw_rate");
+
     IdentificationNode* roll_identification_node = new IdentificationNode(control_system::roll);
 
     ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);
+    ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);
 
     printf("Calling Python to find the sum of 2 and 2.\n");
     
