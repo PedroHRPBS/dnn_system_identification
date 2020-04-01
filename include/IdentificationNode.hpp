@@ -14,6 +14,7 @@ private:
 public:
     void receiveMsgData(DataMessage* t_msg);
     void callPython(double, double);
+    void initializePython();
     IdentificationNode(control_system);
     ~IdentificationNode();
 };
