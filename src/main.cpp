@@ -9,9 +9,15 @@
 
 int main(int argc, char** argv) {
 
+    //There's a problem subscribing to the topics, for some reason they are all getting slowed down.
+    //I have a bag file from when I used the drone connected via ethernet, and the providers topics are all 400Hz
+    //But now, when I publish the raw output from the sensors only and run the node to genete the providers
+    //topic, the topic is only reaching 100Hz.
+    //With that being said, there's no problem with the Python slowing down communication, it's something on the network.
+
     ros::init(argc, argv, "dnn_sys_id_node");
     ros::NodeHandle nh;
-    ros::Rate rate(120);
+    ros::Rate rate(200);
 
     ROSUnit* ros_controloutput_sub = new ROSUnit_ControlOutputSubscriber(nh);
     //TODO remove this, it's only for testing. I have no bag file with the new topic for roll
@@ -40,6 +46,10 @@ int main(int argc, char** argv) {
     ROSUnit* rosunit_yaw_rate_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/providers/yaw_rate");
+    ROSUnit* testando_tempo_loop = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+                                                                    ROSUnit_msg_type::ROSUnit_Point,
+                                                                    "/teste");
+    
 
     IdentificationNode* roll_identification_node = new IdentificationNode(control_system::roll);
     IdentificationNode* pitch_identification_node = new IdentificationNode(control_system::pitch);
@@ -47,6 +57,8 @@ int main(int argc, char** argv) {
 
     ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);
     ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);   
+    // rosunit_roll_provider->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);   
+    // roll_identification_node->addCallbackMsgReceiver((MsgReceiver*)testando_tempo_loop);
 
     Timer tempo;
     while(ros::ok()){

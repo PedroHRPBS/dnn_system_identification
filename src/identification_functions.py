@@ -15,7 +15,7 @@ MRFT_error = deque([], 40000)
 MRFT_time = deque([], 40000)
 MRFT_error_params = []
 rise_edge_times = []
-h_mrft = 0.1 #Change this depending on the defined amplitude of MRFT
+h_mrft = 0.04 #Change this depending on the defined amplitude of MRFT
 
 def receive_data(t_pv, t_u, t_time):
 
@@ -23,7 +23,9 @@ def receive_data(t_pv, t_u, t_time):
         MRFT_error.append(0.0-t_pv) #Error = Reference - PV
         MRFT_time.append(t_time)
 
-        print(t_time)
+        # print(t_time)
+        # print("U:",t_u)
+        # print("PV",t_pv)
 
         if len(MRFT_command) > 1:
                 if (MRFT_command[-1] - MRFT_command[-2]) > (1.95 * h_mrft):  #Detecting rise-edge
@@ -50,9 +52,9 @@ def receive_data(t_pv, t_u, t_time):
 
                                         if max_peak_std < 0.02 and min_peak_std < 0.02 and period_std < 0.02: #0.02 came from analysis of good data example
                                                 print("Steady State DETECTED")
-                                                control_timeseries = list(itertools.islice(MRFT_command, signal_start, signal_end))
-                                                error_timeseries = list(itertools.islice(MRFT_error, signal_start, signal_end))
-                                                timeseries = list(itertools.islice(MRFT_time, signal_start, signal_end))
+                                                control_timeseries = list(itertools.islice(MRFT_command, signal_start, signal_end-1)) #-1 to remove the last rise edge
+                                                error_timeseries = list(itertools.islice(MRFT_error, signal_start, signal_end-1))
+                                                timeseries = list(itertools.islice(MRFT_time, signal_start, signal_end-1))
 
                                                 assert(len(control_timeseries) == len(error_timeseries) == len(timeseries))
 

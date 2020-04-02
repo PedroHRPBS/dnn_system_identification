@@ -3,6 +3,7 @@
 
 Timer tempo;
 Timer tempo2;
+Timer tempo3;
 
 IdentificationNode::IdentificationNode(control_system t_cs) {
     _cs_type = t_cs;
@@ -27,7 +28,9 @@ void IdentificationNode::initializePython(){
 
 void IdentificationNode::callPython(double t_pv, double t_u){
 
-    std::cout << "Tempo callPython: " << tempo.tockMicroSeconds() << "\n";
+    //TODO split in more functions
+
+    //std::cout << "Tempo callPython: " << tempo.tockMicroSeconds() << "\n";
     
      // Convert the file name to a Python string.
     PyObject* py_filename = PyString_FromString("identification_functions");
@@ -53,7 +56,7 @@ void IdentificationNode::callPython(double t_pv, double t_u){
     if(py_receive_data_return == NULL){
         printf("Calling the add method failed.\n");
     }
-    tempo.tick();
+    //tempo.tick();
     
 }
 
@@ -62,13 +65,16 @@ void IdentificationNode::receiveMsgData(DataMessage* t_msg){
     if(t_msg->getType() == msg_type::VECTORDOUBLE){
         VectorDoubleMsg* vector_double_msg = (VectorDoubleMsg*)t_msg;
         _u = vector_double_msg->data[(int)_cs_type];
+        //std::cout << "Tempo VECTORDOUBLE: " << tempo3.tockMicroSeconds() << "\n";
+        //tempo3.tick();
     
     }else if(t_msg->getType() == msg_type::VECTOR3D){
         Vector3DMessage* vector3d_msg = (Vector3DMessage*)t_msg;
         //TODO change to .x after moving to the newest code
-        _PV = vector3d_msg->getData().y;
-        std::cout << "Tempo receiveMsgData: " << tempo2.tockMicroSeconds() << "\n";
-        tempo2.tick();
+        _PV = vector3d_msg->getData().x;
+        //std::cout << "Tempo VECTOR3D: " << tempo2.tockMicroSeconds() << "\n";
+        //tempo2.tick();
+        //this->emitMsgUnicastDefault(vector3d_msg);
         this->callPython(_PV, _u);
         
     

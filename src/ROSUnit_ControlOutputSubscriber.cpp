@@ -7,7 +7,7 @@ ROSUnit_ControlOutputSubscriber::ROSUnit_ControlOutputSubscriber(ros::NodeHandle
 
     //TODO the new topic is called control_system_output, don't forget to change after mobing to the new code.
     //TODO check the queue size only when using live data
-    _sub_controloutput = t_main_handler.subscribe("control_systems_output", 4, callbackControlOutput);
+    _sub_controloutput = t_main_handler.subscribe("control_systems_output", 1, callbackControlOutput);
     _instance_ptr = this;
 
 }
