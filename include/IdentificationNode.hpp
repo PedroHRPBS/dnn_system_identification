@@ -4,6 +4,7 @@
 #include "MsgReceiver.hpp"
 #include "MsgEmitter.hpp"
 #include "Python.h"
+#include "ros/ros.h"
 
 class IdentificationNode : public MsgEmitter, public MsgReceiver{
 

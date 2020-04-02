@@ -1,9 +1,15 @@
-#import rospy
-# Returns the sum of two numbers.
+# Solution found at https://github.com/googleapis/oauth2client/issues/642
+import sys
+if not hasattr(sys, 'argv'):
+        sys.argv  =  ['']
 
-def receive_data(t_pv, t_u):
+import numpy as np
+import tensorflow as tf
 
-    # current_time = rospy.Time.now()
+# MRFT_command = []
+# MRFT_u = []
+print("DONE ")
+def receive_data(t_pv, t_u, t_time):
 
-    print("PV: ", t_pv, " U: ", t_u, " Time: ")
+    print("PV: ", t_pv, " U: ", t_u, " Time: ", t_time)
 

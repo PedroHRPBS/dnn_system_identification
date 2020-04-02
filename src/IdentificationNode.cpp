@@ -16,7 +16,9 @@ void IdentificationNode::initializePython(){
     Py_Initialize();
     //Update Python path to include current folder
     PyObject* sysPath = PySys_GetObject((char*)"path");
-    PyList_Append(sysPath, PyString_FromString("/home/pedrohrpbs/catkin_ws_NAVIO/src/dnn_system_identification/src"));
+    PyList_Append(sysPath, PyString_FromString("/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src"));
+    //PyList_Append(sysPath, PyString_FromString("/home/pedrohrpbs/catkin_ws_tensorflow/venv/bin/python"));
+    
     printf("initializePython\n");   
 }
 
@@ -30,15 +32,16 @@ void IdentificationNode::callPython(double t_pv, double t_u){
     PyObject* py_dictionary = PyModule_GetDict(py_module); 
     // Get the name of the method from the dictionary.
     PyObject* py_receive_data_function = PyDict_GetItemString(py_dictionary, "receive_data");
-    
     // Create a Python tuple to hold the arguments to the method.
-    PyObject* receive_data_arguments = PyTuple_New(2);
+    PyObject* receive_data_arguments = PyTuple_New(3);
     // Convert 2 to a Python integer.
     PyObject* py_pv = PyFloat_FromDouble(t_pv);
     PyObject* py_u = PyFloat_FromDouble(t_u);
+    PyObject* time_now = PyFloat_FromDouble(ros::Time::now().toSec());
     // Set the Python int as the first and second arguments to the method.
     PyTuple_SetItem(receive_data_arguments, 0, py_pv);
     PyTuple_SetItem(receive_data_arguments, 1, py_u);
+    PyTuple_SetItem(receive_data_arguments, 2, time_now);
     // Call the function with the arguments.
     PyObject* py_receive_data_return = PyObject_CallObject(py_receive_data_function, receive_data_arguments);
     // Print a message if calling the method failed.

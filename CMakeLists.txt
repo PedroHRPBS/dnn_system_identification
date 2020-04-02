@@ -14,8 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 
-FIND_PACKAGE(PythonInterp 3)
-FIND_PACKAGE(PythonLibs 3)
+FIND_PACKAGE(PythonInterp)
+FIND_PACKAGE(PythonLibs)
 
 # add_message_files(
 #   FILES
@@ -33,19 +33,19 @@ generate_messages(
 
 catkin_package(
   INCLUDE_DIRS include
-  CATKIN_DEPENDS roscpp std_msgs message_runtime common_srv
+  CATKIN_DEPENDS roscpp std_msgs message_runtime common_srv tensorflow
 )
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/../flight_controller/include/ROSUnits
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../../catkin_ws_NAVIO/src/flight_controller/include/ROSUnits
   ${catkin_INCLUDE_DIRS}
   ${PYTHON_INCLUDE_DIRS}
 )
 
 FILE(GLOB SOURCE_FILES *.hpp *.cpp *.h
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../flight_controller/src/ROSUnits/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../../catkin_ws_NAVIO/src/flight_controller/src/ROSUnits/*.cpp
         )
 
 add_executable(${PROJECT_NAME} src/main.cpp ${SOURCE_FILES})
