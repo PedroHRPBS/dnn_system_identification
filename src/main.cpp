@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
 
     ros::init(argc, argv, "dnn_sys_id_node");
     ros::NodeHandle nh;
-    ros::Rate rate(400);
+    ros::Rate rate(120);
 
     ROSUnit* ros_controloutput_sub = new ROSUnit_ControlOutputSubscriber(nh);
     //TODO remove this, it's only for testing. I have no bag file with the new topic for roll
@@ -48,9 +48,15 @@ int main(int argc, char** argv) {
     ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);
     ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);   
 
+    Timer tempo;
     while(ros::ok()){
+        tempo.tick();
+        
         ros::spinOnce();
+
         rate.sleep(); 
+        //std::cout << "Tempo os::ok(): " << tempo.tockMicroSeconds() << "\n";
+
     }
 
     roll_identification_node->~IdentificationNode();

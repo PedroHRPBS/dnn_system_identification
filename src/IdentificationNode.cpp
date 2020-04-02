@@ -1,5 +1,8 @@
 #include "IdentificationNode.hpp"
+#include "Timer.hpp"
 
+Timer tempo;
+Timer tempo2;
 
 IdentificationNode::IdentificationNode(control_system t_cs) {
     _cs_type = t_cs;
@@ -24,6 +27,8 @@ void IdentificationNode::initializePython(){
 
 void IdentificationNode::callPython(double t_pv, double t_u){
 
+    std::cout << "Tempo callPython: " << tempo.tockMicroSeconds() << "\n";
+    
      // Convert the file name to a Python string.
     PyObject* py_filename = PyString_FromString("identification_functions");
     // Import the file as a Python module.
@@ -48,6 +53,7 @@ void IdentificationNode::callPython(double t_pv, double t_u){
     if(py_receive_data_return == NULL){
         printf("Calling the add method failed.\n");
     }
+    tempo.tick();
     
 }
 
@@ -61,8 +67,11 @@ void IdentificationNode::receiveMsgData(DataMessage* t_msg){
         Vector3DMessage* vector3d_msg = (Vector3DMessage*)t_msg;
         //TODO change to .x after moving to the newest code
         _PV = vector3d_msg->getData().y;
-
+        std::cout << "Tempo receiveMsgData: " << tempo2.tockMicroSeconds() << "\n";
+        tempo2.tick();
         this->callPython(_PV, _u);
+        
+    
     }
 
 }

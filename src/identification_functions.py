@@ -23,9 +23,11 @@ def receive_data(t_pv, t_u, t_time):
         MRFT_error.append(0.0-t_pv) #Error = Reference - PV
         MRFT_time.append(t_time)
 
+        print(t_time)
+
         if len(MRFT_command) > 1:
                 if (MRFT_command[-1] - MRFT_command[-2]) > (1.95 * h_mrft):  #Detecting rise-edge
-                        rise_edge_times.append((len(MRFT_command) - 1, t_time)) #Tuple (index of rise-edge, time)
+                        rise_edge_times.append((len(MRFT_command), t_time)) #Tuple (index of rise-edge, time)
                         print("RISE DETECTED: ", len(rise_edge_times), "at time: ", t_time)
 
                         if len(rise_edge_times) >= 2:
@@ -36,6 +38,26 @@ def receive_data(t_pv, t_u, t_time):
                                 period = rise_edge_times[-1][1] - rise_edge_times[-2][1]
                                 MRFT_error_params.append((max_peak, min_peak, period))
 
-                                print(MRFT_error_params[-1])
+                                print("MRFT_error_params:", MRFT_error_params[-1])
 
+                                if len(MRFT_error_params) > 3: #Testing consistency of data, to detect steady state
+                                        
+                                        max_peak_std = np.std([element[0] for element in MRFT_error_params[-3:]]) #Only get the std of the last 3 events
+                                        min_peak_std = np.std([element[1] for element in MRFT_error_params[-3:]])
+                                        period_std = np.std([element[2] for element in MRFT_error_params[-3:]])
 
+                                        print(max_peak_std, min_peak_std, period_std)
+
+                                        if max_peak_std < 0.02 and min_peak_std < 0.02 and period_std < 0.02: #0.02 came from analysis of good data example
+                                                print("Steady State DETECTED")
+                                                control_timeseries = list(itertools.islice(MRFT_command, signal_start, signal_end))
+                                                error_timeseries = list(itertools.islice(MRFT_error, signal_start, signal_end))
+                                                timeseries = list(itertools.islice(MRFT_time, signal_start, signal_end))
+
+                                                assert(len(control_timeseries) == len(error_timeseries) == len(timeseries))
+
+                                                print(control_timeseries)
+                                                print(error_timeseries)
+                                                print(timeseries)
+
+                                                        
