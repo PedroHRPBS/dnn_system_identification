@@ -5,10 +5,7 @@ if not hasattr(sys, 'argv'):
 
 import numpy as np
 from _collections import deque
-# Solution found at https://answers.ros.org/question/289855/import-tensorflow-in-ros-kinetic/ by Oscar Pang
-import tensorflow as tf
 import itertools
-import scipy.io as sio
 
 MRFT_command = deque([], 40000) #Considering data is received at 400Hz max, 100seg of data is more than enough
 MRFT_error = deque([], 40000)
@@ -17,6 +14,8 @@ MRFT_error_params = []
 rise_edge_times = []
 h_mrft = 0.04 #Change this depending on the defined amplitude of MRFT
 SCALED_GAIN = 0.0
+
+T1 = -1.0; T2 = -1.0; tau = -1.0; Kp = -1.0; Kd = -1.0; Ki = -1.0
 
 def receive_data(t_pv, t_u, t_time):
 
@@ -29,6 +28,12 @@ def receive_data(t_pv, t_u, t_time):
         # print("PV",t_pv)
 
         detect_rise_edges(t_time)
+
+        if Kp != -1.0 and Kd != -1.0:
+                print("KP: ", Kp, "\n KD: ", Kd)
+                return Kp, Kd
+        else:
+                pass
                        
 
 def detect_rise_edges(t_time):
@@ -127,7 +132,23 @@ def normalize_data(control_timeseries, error_timeseries):
         input_layer = input_layer.tolist()
 
         print(input_layer)
-       
 
+def dnn_classify(normalized_error_timeseries, normalized_control_timeseries):
 
-        
+        # #Format input to comply with neural network
+        # pv_data_array = np.asarray(normalized_error_timeseries)
+        # command_data_array = np.asarray(normalized_control_timeseries)
+        # input_data = np.dstack([np.vstack(pv_data_array), np.vstack(command_data_array)])
+        # input_data = input_data.reshape(1, 2260, 1, 2)
+
+        # prediction = nn_model.predict(input_data)
+        # classification = np.argmax(prediction)
+
+        # temp_system = systems[classification]
+        # T1 = temp_system[0]
+        # T2 = temp_system[1]
+        # tau = temp_system[2]
+        # Kp = temp_system[3] * SCALED_GAIN
+        # Kd = temp_system[4] * SCALED_GAIN
+        # Ki = 0
+        pass
