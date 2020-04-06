@@ -18,8 +18,8 @@ h_mrft = 0.04 #Change this depending on the defined amplitude of MRFT
 global T1, T2, tau, Kp, Kd, Ki
 T1 = -1.0; T2 = -1.0; tau = -1.0; Kp = -1.0; Kd = -1.0; Ki = -1.0
 
-dnn_model = tf.keras.models.load_model('model.h5')
-systems = np.loadtxt('systems_truth_table.csv', delimiter=',')
+dnn_model = tf.keras.models.load_model('/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/model.h5')
+systems = np.loadtxt('/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/systems_truth_table.csv', delimiter=',')
 
 def receive_data(t_pv, t_u, t_time):
 
