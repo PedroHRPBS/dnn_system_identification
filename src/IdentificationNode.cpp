@@ -39,7 +39,12 @@ void IdentificationNode::callPython(double t_pv, double t_u){
     PyObject* method_name = PyString_FromString("receive_data");
     PyObject* py_receive_data_return = PyObject_CallMethodObjArgs(this->_my_identifier, method_name, py_pv, py_u, time_now, NULL);
 
+    _Kp = PyLong_AsLong(PyTuple_GetItem(py_receive_data_return, 0));
+    _Kd = PyLong_AsLong(PyTuple_GetItem(py_receive_data_return, 1));
 
+    if(_Kp > 0.0 && _Kd > 0.0){
+        printf("KP = %lf, KD = %lf", _Kp, _Kd);
+    }
 
     if(py_receive_data_return == NULL){
         printf("Calling the add method failed.\n");

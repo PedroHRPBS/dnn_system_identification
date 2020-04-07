@@ -28,9 +28,9 @@ class Identification:
         self.__MRFT_error.append(t_pv)
         self.__MRFT_time.append(t_time)
 
-        print(t_time)
-        print("U:",self.__MRFT_command[-1])
-        print("PV",self.__MRFT_error[-1])
+        # print(t_time)
+        # print("U:",self.__MRFT_command[-1])
+        # print("PV",self.__MRFT_error[-1])
 
         self.detect_rise_edges(t_time)
 

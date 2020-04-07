@@ -9,7 +9,7 @@
 class IdentificationNode : public MsgEmitter, public MsgReceiver{
 
 private:
-    double _PV, _u;
+    double _PV, _u, _Kp, _Kd;
     control_system _cs_type;
     PyObject* _my_identifier;
 
