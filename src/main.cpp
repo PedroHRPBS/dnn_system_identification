@@ -18,7 +18,8 @@ int main(int argc, char** argv) {
     ros::init(argc, argv, "dnn_sys_id_node");
     ros::NodeHandle nh;
     ros::Rate rate(200);
-
+    //TODO add enable service
+    //TODO update PID
     ROSUnit* ros_controloutput_sub = new ROSUnit_ControlOutputSubscriber(nh);
     //TODO remove this, it's only for testing. I have no bag file with the new topic for roll
     ROSUnit* ros_orientation_sub = new ROSUnit_OrientationSubscriber(nh);
