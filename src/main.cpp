@@ -57,8 +57,11 @@ int main(int argc, char** argv) {
 
     ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);
     ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);   
-    // ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)pitch_identification_node);
-    // ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)pitch_identification_node);   
+    ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)pitch_identification_node);
+    ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)pitch_identification_node);   
+    ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)z_identification_node);
+    ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)z_identification_node);   
+
 
     Timer tempo;
     while(ros::ok()){
@@ -73,7 +76,7 @@ int main(int argc, char** argv) {
 
     roll_identification_node->~IdentificationNode();
     pitch_identification_node->~IdentificationNode();
-    z_identification_node->~IdentificationNode();
+    // z_identification_node->~IdentificationNode();
 
     return 0;
 }

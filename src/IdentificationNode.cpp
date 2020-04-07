@@ -18,28 +18,21 @@ IdentificationNode::~IdentificationNode() {
 void IdentificationNode::initializePython(){
     // Initialize the Python interpreter.    
     Py_Initialize();
-    //Update Python path to include current folder
+    // Update Python path to include current folder
     PyObject* sysPath = PySys_GetObject((char*)"path");
     PyList_Append(sysPath, PyString_FromString("/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src"));
-    //PyList_Append(sysPath, PyString_FromString("/home/pedrohrpbs/catkin_ws_tensorflow/venv/bin/python"));
     
     printf("initializePython\n");   
+
+    PyObject* py_filename = PyString_FromString("IdentificationClass");
+    PyObject* py_module = PyImport_Import(py_filename); 
+    PyObject* py_dictionary = PyModule_GetDict(py_module); 
+    PyObject* py_receive_data_function = PyDict_GetItemString(py_dictionary, "return_instance");
+    _my_identifier = PyObject_CallObject(py_receive_data_function, NULL);
 }
 
 void IdentificationNode::callPython(double t_pv, double t_u){
 
-    //TODO split in more functions
-
-    //std::cout << "Tempo callPython: " << tempo.tockMicroSeconds() << "\n";
-    
-     // Convert the file name to a Python string.
-    PyObject* py_filename = PyString_FromString("identification_functions");
-    // Import the file as a Python module.
-    PyObject* py_module = PyImport_Import(py_filename); 
-    // Create a dictionary for the contents of the module.
-    PyObject* py_dictionary = PyModule_GetDict(py_module); 
-    // Get the name of the method from the dictionary.
-    PyObject* py_receive_data_function = PyDict_GetItemString(py_dictionary, "receive_data");
     // Create a Python tuple to hold the arguments to the method.
     PyObject* receive_data_arguments = PyTuple_New(3);
     // Convert 2 to a Python integer.
@@ -50,8 +43,10 @@ void IdentificationNode::callPython(double t_pv, double t_u){
     PyTuple_SetItem(receive_data_arguments, 0, py_pv);
     PyTuple_SetItem(receive_data_arguments, 1, py_u);
     PyTuple_SetItem(receive_data_arguments, 2, time_now);
-    // Call the function with the arguments.
-    PyObject* py_receive_data_return = PyObject_CallObject(py_receive_data_function, receive_data_arguments);
+    // Call the function with the arguments.PyObject_CallMethodObjArgs
+    PyObject* name = PyString_FromString("receive_data");
+    PyObject* py_receive_data_return = PyObject_CallMethodObjArgs(_my_identifier, name, py_pv, py_u, time_now, NULL);
+
     // Print a message if calling the method failed.
     if(py_receive_data_return == NULL){
         printf("Calling the add method failed.\n");

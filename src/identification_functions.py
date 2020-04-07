@@ -1,39 +1,17 @@
-# Solution found at https://github.com/googleapis/oauth2client/issues/642
-import sys
-if not hasattr(sys, 'argv'):
-        sys.argv  =  ['']
 
-import numpy as np
-from _collections import deque
-import itertools
-import tensorflow as tf
+def receive_data(self, t_pv, t_u, t_time):
+        print("Inside receive_data")
+        self.__MRFT_command.append(t_u)
+        self.__MRFT_error.append(t_pv)
+        self.__MRFT_time.append(t_time)
 
-MRFT_command = deque([], 40000) #Considering data is received at 400Hz max, 100seg of data is more than enough
-MRFT_error = deque([], 40000)
-MRFT_time = deque([], 40000)
-MRFT_error_params = []
-rise_edge_times = []
-h_mrft = 0.04 #Change this depending on the defined amplitude of MRFT
-global T1, T2, tau, Kp, Kd, Ki
-T1 = -1.0; T2 = -1.0; tau = -1.0; Kp = -1.0; Kd = -1.0; Ki = -1.0
-
-dnn_model = tf.keras.models.load_model('/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/model.h5')
-systems = np.loadtxt('/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/systems_truth_table.csv', delimiter=',')
-
-def receive_data(t_pv, t_u, t_time):
-
-        MRFT_command.append(t_u)
-        MRFT_error.append(t_pv)
-        MRFT_time.append(t_time)
-
-        # print(t_time)
-        # print("U:",t_u)
-        # print("PV",t_pv)
+        print(t_time)
+        print("U:",self.__MRFT_command[-1])
+        print("PV",self.__MRFT_error[-1])
 
         detect_rise_edges(t_time)
-
-        return Kp, Kd
-                       
+# 
+        return Kp, Kd            
 
 def detect_rise_edges(t_time):
         if len(MRFT_command) > 1:
@@ -73,14 +51,14 @@ def detect_steady_state(signal_start, signal_end, samples=3):
 
                         assert(len(control_timeseries) == len(error_timeseries) == len(timeseries))
 
-                        #print(control_timeseries)
-                        #print(error_timeseries)
-                        #print(timeseries)
+                        print(control_timeseries)
+                        print(error_timeseries)
+                        print(timeseries)
 
                         interpolate_data(control_timeseries, error_timeseries, timeseries)
 
 def interpolate_data(control_timeseries, error_timeseries, timeseries):
-        #Interpolate
+        Interpolate
         initial_time = timeseries[0]
         x = [(i-initial_time)*1000 for i in timeseries] #Start from 0, and multiply by 1000, so 1 = 1ms
 
@@ -88,7 +66,7 @@ def interpolate_data(control_timeseries, error_timeseries, timeseries):
         error_interp = np.interp(xvals, x, error_timeseries)
         control_interp = np.interp(xvals, x, control_timeseries)
 
-        #Removing transition values
+        Removing transition values
         control_interp[control_interp>=0] = max(control_interp)
         control_interp[control_interp<0] = min(control_interp)
 
@@ -111,19 +89,19 @@ def normalize_data(control_timeseries, error_timeseries):
 
         SCALED_GAIN = h_mrft_control / h_mrft_error
 
-        #Zero center
+        Zero center
         offset_control = ((max(control_timeseries) + min(control_timeseries)) / 2.0)
         offset_error = ((max(error_timeseries) + min(error_timeseries)) / 2.0)
         control_timeseries_zero_center = [x-offset_control for x in control_timeseries]  
         error_timeseries_zero_center = [x-offset_error for x in error_timeseries]
 
-        #Normalize
+        Normalize
         control_timeseries_max = max(control_timeseries_zero_center)
         error_timeseries_max = max(error_timeseries_zero_center)
         control_timeseries_normalized = [x * 1.0 / control_timeseries_max for x in control_timeseries_zero_center]
         error_timeseries_normalized = [x * 1.0 / error_timeseries_max for x in error_timeseries_zero_center]
 
-        #Zero-padding
+        Zero-padding
         normalized_control_timeseries = np.zeros(sample_size)
         normalized_error_timeseries = np.zeros(sample_size)
         normalized_control_timeseries[-len(control_timeseries_normalized):] = control_timeseries_normalized
@@ -135,7 +113,7 @@ def dnn_classify(normalized_error_timeseries, normalized_control_timeseries, sca
 
         global T1, T2, tau, Kp, Kd, Ki
 
-        #Format input to comply with neural network
+        Format input to comply with neural network
         pv_data_array = np.asarray(normalized_error_timeseries)
         command_data_array = np.asarray(normalized_control_timeseries)
         input_data = np.dstack([np.vstack(pv_data_array), np.vstack(command_data_array)])

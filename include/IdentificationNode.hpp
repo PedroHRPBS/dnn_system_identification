@@ -11,6 +11,7 @@ class IdentificationNode : public MsgEmitter, public MsgReceiver{
 private:
     double _PV, _u;
     control_system _cs_type;
+    PyObject* _my_identifier;
 
 public:
     void receiveMsgData(DataMessage* t_msg);
