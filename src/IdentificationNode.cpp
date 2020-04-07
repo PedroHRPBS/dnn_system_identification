@@ -33,24 +33,26 @@ void IdentificationNode::initializePython(){
 
 void IdentificationNode::callPython(double t_pv, double t_u){
 
-    PyObject* py_pv = PyFloat_FromDouble(t_pv);
-    PyObject* py_u = PyFloat_FromDouble(t_u);
-    PyObject* time_now = PyFloat_FromDouble(ros::Time::now().toSec());
-    PyObject* method_name = PyString_FromString("receive_data");
-    PyObject* py_receive_data_return = PyObject_CallMethodObjArgs(this->_my_identifier, method_name, py_pv, py_u, time_now, NULL);
-
-    _Kp = PyLong_AsLong(PyTuple_GetItem(py_receive_data_return, 0));
-    _Kd = PyLong_AsLong(PyTuple_GetItem(py_receive_data_return, 1));
-
-    if(_Kp > 0.0 && _Kd > 0.0){
-        printf("KP = %lf, KD = %lf", _Kp, _Kd);
-    }
-
-    if(py_receive_data_return == NULL){
-        printf("Calling the add method failed.\n");
-    }
-    //tempo.tick();
+    if(_enabled){
+        PyObject* py_pv = PyFloat_FromDouble(t_pv);
+        PyObject* py_u = PyFloat_FromDouble(t_u);
+        PyObject* time_now = PyFloat_FromDouble(ros::Time::now().toSec());
+        PyObject* method_name = PyString_FromString("receive_data");
+        PyObject* py_receive_data_return = PyObject_CallMethodObjArgs(this->_my_identifier, method_name, py_pv, py_u, time_now, NULL);
     
+        _Kp = PyFloat_AsDouble(PyTuple_GetItem(py_receive_data_return, 0));
+        _Kd = PyFloat_AsDouble(PyTuple_GetItem(py_receive_data_return, 1));
+    
+        if(_Kp > 0.0 && _Kd > 0.0){
+            printf("CS = %d: KP = %lf, KD = %lf\n", (int)_cs_type, _Kp, _Kd);
+            _enabled = false;
+        }
+    
+        if(py_receive_data_return == NULL){
+            printf("Calling the add method failed.\n");
+        }
+        //tempo.tick();
+    }
 }
 
 void IdentificationNode::receiveMsgData(DataMessage* t_msg){

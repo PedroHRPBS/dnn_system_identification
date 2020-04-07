@@ -12,6 +12,7 @@ private:
     double _PV, _u, _Kp, _Kd;
     control_system _cs_type;
     PyObject* _my_identifier;
+    bool _enabled = true;
 
 public:
     void receiveMsgData(DataMessage* t_msg);
