@@ -28,26 +28,19 @@ void IdentificationNode::initializePython(){
     PyObject* py_module = PyImport_Import(py_filename); 
     PyObject* py_dictionary = PyModule_GetDict(py_module); 
     PyObject* py_receive_data_function = PyDict_GetItemString(py_dictionary, "return_instance");
-    _my_identifier = PyObject_CallObject(py_receive_data_function, NULL);
+    this->_my_identifier = PyObject_CallObject(py_receive_data_function, NULL);
 }
 
 void IdentificationNode::callPython(double t_pv, double t_u){
 
-    // Create a Python tuple to hold the arguments to the method.
-    PyObject* receive_data_arguments = PyTuple_New(3);
-    // Convert 2 to a Python integer.
     PyObject* py_pv = PyFloat_FromDouble(t_pv);
     PyObject* py_u = PyFloat_FromDouble(t_u);
     PyObject* time_now = PyFloat_FromDouble(ros::Time::now().toSec());
-    // Set the Python int as the first and second arguments to the method.
-    PyTuple_SetItem(receive_data_arguments, 0, py_pv);
-    PyTuple_SetItem(receive_data_arguments, 1, py_u);
-    PyTuple_SetItem(receive_data_arguments, 2, time_now);
-    // Call the function with the arguments.PyObject_CallMethodObjArgs
-    PyObject* name = PyString_FromString("receive_data");
-    PyObject* py_receive_data_return = PyObject_CallMethodObjArgs(_my_identifier, name, py_pv, py_u, time_now, NULL);
+    PyObject* method_name = PyString_FromString("receive_data");
+    PyObject* py_receive_data_return = PyObject_CallMethodObjArgs(this->_my_identifier, method_name, py_pv, py_u, time_now, NULL);
 
-    // Print a message if calling the method failed.
+
+
     if(py_receive_data_return == NULL){
         printf("Calling the add method failed.\n");
     }
