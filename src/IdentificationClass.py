@@ -22,6 +22,9 @@ class Identification:
         self.__h_mrft = t_h_mrft #Change this depending on the defined amplitude of MRFT
         self.__T1 = -1.0; self.__T2 = -1.0; self.__tau = -1.0; self.__Kp = -1.0; self.__Kd = -1.0; self.__Ki = -1.0
 
+    def get_MRFT_amp(self):
+        return self.__h_mrft
+
     def receive_data(self, t_pv, t_u, t_time):
         self.__MRFT_command.append(t_u)
         self.__MRFT_error.append(t_pv)
@@ -158,6 +161,6 @@ class Identification:
 
 def return_instance(t_h_mrft):
     new_object = Identification(t_h_mrft)
-    print("new_object instantiated, with amplitude: ",t_h_mrft)
+    print("new_object instantiated, with amplitude: ", new_object.get_MRFT_amp())
     return new_object
 
