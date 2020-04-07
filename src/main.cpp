@@ -51,9 +51,9 @@ int main(int argc, char** argv) {
                                                                     "/teste");
     
 
-    IdentificationNode* roll_identification_node = new IdentificationNode(control_system::roll);
-    IdentificationNode* pitch_identification_node = new IdentificationNode(control_system::pitch);
-    IdentificationNode* z_identification_node = new IdentificationNode(control_system::z);
+    IdentificationNode* roll_identification_node = new IdentificationNode(control_system::roll, 0.04);
+    IdentificationNode* pitch_identification_node = new IdentificationNode(control_system::pitch, 0.04);
+    IdentificationNode* z_identification_node = new IdentificationNode(control_system::z, 0.1);
 
     ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);
     ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);   
@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
 
     roll_identification_node->~IdentificationNode();
     pitch_identification_node->~IdentificationNode();
-    // z_identification_node->~IdentificationNode();
+    z_identification_node->~IdentificationNode();
 
     return 0;
 }

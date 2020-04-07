@@ -5,8 +5,9 @@ Timer tempo;
 Timer tempo2;
 Timer tempo3;
 
-IdentificationNode::IdentificationNode(control_system t_cs) {
+IdentificationNode::IdentificationNode(control_system t_cs, double t_h_mrft) {
     _cs_type = t_cs;
+    _h_mrft = t_h_mrft;
     this->initializePython();
 }
 
@@ -28,7 +29,9 @@ void IdentificationNode::initializePython(){
     PyObject* py_module = PyImport_Import(py_filename); 
     PyObject* py_dictionary = PyModule_GetDict(py_module); 
     PyObject* py_receive_data_function = PyDict_GetItemString(py_dictionary, "return_instance");
-    this->_my_identifier = PyObject_CallObject(py_receive_data_function, NULL);
+    PyObject* py_h_mrft = PyTuple_New(1);
+    PyTuple_SetItem(py_h_mrft, 0, PyFloat_FromDouble(_h_mrft));
+    this->_my_identifier = PyObject_CallObject(py_receive_data_function, py_h_mrft);
 }
 
 void IdentificationNode::callPython(double t_pv, double t_u){

@@ -11,7 +11,7 @@ import tensorflow as tf
 
 class Identification:
      
-    def __init__(self):
+    def __init__(self, t_h_mrft):
         self.dnn_model = tf.keras.models.load_model('/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/model.h5')
         self.systems = np.loadtxt('/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/systems_truth_table.csv', delimiter=',')
         self.__MRFT_command = deque([], 40000) #Considering data is received at 400Hz max, 100seg of data is more than enough
@@ -19,7 +19,7 @@ class Identification:
         self.__MRFT_time = deque([], 40000)
         self.__MRFT_error_params = []
         self.__rise_edge_times = []
-        self.__h_mrft = 0.04 #Change this depending on the defined amplitude of MRFT #TODO receive this value externally
+        self.__h_mrft = t_h_mrft #Change this depending on the defined amplitude of MRFT
         self.__T1 = -1.0; self.__T2 = -1.0; self.__tau = -1.0; self.__Kp = -1.0; self.__Kd = -1.0; self.__Ki = -1.0
 
     def receive_data(self, t_pv, t_u, t_time):
@@ -156,8 +156,8 @@ class Identification:
         print("")
 
 
-def return_instance():
-    new_object = Identification()
-    print("new_object instantiated")
+def return_instance(t_h_mrft):
+    new_object = Identification(t_h_mrft)
+    print("new_object instantiated, with amplitude: ",t_h_mrft)
     return new_object
 
