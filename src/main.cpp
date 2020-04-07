@@ -57,8 +57,8 @@ int main(int argc, char** argv) {
 
     ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);
     ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);   
-    // rosunit_roll_provider->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);   
-    // roll_identification_node->addCallbackMsgReceiver((MsgReceiver*)testando_tempo_loop);
+    // ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)pitch_identification_node);
+    // ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)pitch_identification_node);   
 
     Timer tempo;
     while(ros::ok()){

@@ -8,7 +8,6 @@ from _collections import deque
 import itertools
 import tensorflow as tf
 
-
 MRFT_command = deque([], 40000) #Considering data is received at 400Hz max, 100seg of data is more than enough
 MRFT_error = deque([], 40000)
 MRFT_time = deque([], 40000)
@@ -98,6 +97,10 @@ def interpolate_data(control_timeseries, error_timeseries, timeseries):
 
         assert(len(error_interp) == len(control_interp) == len(xvals))
 
+        print(control_interp)
+        print(error_interp)
+
+
         normalize_data(control_interp, error_interp)
 
 
@@ -142,11 +145,11 @@ def dnn_classify(normalized_error_timeseries, normalized_control_timeseries, sca
         classification = np.argmax(prediction)
 
         temp_system = systems[classification]
-        T1 = temp_system[0]
-        T2 = temp_system[1]
-        tau = temp_system[2]
-        Kp = temp_system[3] * scaled_gain
-        Kd = temp_system[4] * scaled_gain
+        T1 = temp_system[1]
+        T2 = temp_system[2]
+        tau = temp_system[3]
+        Kp = temp_system[7] * scaled_gain
+        Kd = temp_system[8] * scaled_gain
         Ki = 0
         print("")
         print("CLASS: ", classification, "KP: ", Kp, "KD: ", Kd, "Scaled Gain: ", scaled_gain)
