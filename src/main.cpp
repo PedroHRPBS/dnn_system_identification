@@ -7,6 +7,7 @@
 #include "ROSUnit_Factory.hpp"
 #include "ROSUnit_OrientationSubscriber.hpp"
 #include "ROSUnit_UpdateController.hpp"
+#include "Timer.hpp"
 
 int main(int argc, char** argv) {
 
@@ -51,7 +52,7 @@ int main(int argc, char** argv) {
     ROSUnit* testando_tempo_loop = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/teste");
-    
+
 
     IdentificationNode* roll_identification_node = new IdentificationNode(control_system::roll, 0.04);
     IdentificationNode* pitch_identification_node = new IdentificationNode(control_system::pitch, 0.04);

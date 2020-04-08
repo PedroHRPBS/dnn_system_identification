@@ -51,7 +51,6 @@ void IdentificationNode::callPython(double t_pv, double t_u){
             _enabled = false;
             
             ControllerMessage _pid_parameters_message;
-            pid_data.
             _pid_parameters_message.setPIDParam(this->pid_data);
             this->emitMsgUnicastDefault((DataMessage*)&_pid_parameters_message);
         }
