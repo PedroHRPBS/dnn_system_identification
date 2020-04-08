@@ -6,11 +6,8 @@
                 "limitSymbolsToIncludedHeaders": true
             },
             "includePath": [
-                "/home/pedrohrpbs/catkin_ws_NAVIO/devel/include/**",
-                "/opt/ros/kinetic/include/**",
                 "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/include/**",
-                "/home/pedrohrpbs/catkin_ws_NAVIO/src/flight_controller/include/ROSUnits/**",
-                "/usr/include/**"
+                "/home/pedrohrpbs/catkin_ws_NAVIO/src/flight_controller/include/ROSUnits/**"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",

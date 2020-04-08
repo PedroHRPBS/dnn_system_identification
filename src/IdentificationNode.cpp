@@ -51,6 +51,15 @@ void IdentificationNode::callPython(double t_pv, double t_u){
             _enabled = false;
             
             ControllerMessage _pid_parameters_message;
+
+            pid_data.kp = _Kp;
+            pid_data.ki = 0.0;
+            pid_data.kd = _Kd;
+            pid_data.kdd = 0.0;
+            pid_data.anti_windup = 0.0;
+            pid_data.en_pv_derivation = 1.0;
+            pid_data.id = static_cast<block_id>(_cs_type);
+
             _pid_parameters_message.setPIDParam(this->pid_data);
             this->emitMsgUnicastDefault((DataMessage*)&_pid_parameters_message);
         }
