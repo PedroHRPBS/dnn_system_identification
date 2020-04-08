@@ -5,6 +5,7 @@
 #include "MsgEmitter.hpp"
 #include "Python.h"
 #include "ros/ros.h"
+#include "ControllerMessage.hpp"
 
 class IdentificationNode : public MsgEmitter, public MsgReceiver{
 
@@ -13,6 +14,7 @@ private:
     control_system _cs_type;
     PyObject* _my_identifier;
     bool _enabled = true;
+    PID_parameters pid_data;
 
 public:
     void receiveMsgData(DataMessage* t_msg);

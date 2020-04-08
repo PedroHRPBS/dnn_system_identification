@@ -49,6 +49,11 @@ void IdentificationNode::callPython(double t_pv, double t_u){
         if(_Kp > 0.0 && _Kd > 0.0){
             printf("CS = %d: KP = %lf, KD = %lf\n", (int)_cs_type, _Kp, _Kd);
             _enabled = false;
+            
+            ControllerMessage _pid_parameters_message;
+            pid_data.
+            _pid_parameters_message.setPIDParam(this->pid_data);
+            this->emitMsgUnicastDefault((DataMessage*)&_pid_parameters_message);
         }
     
         if(py_receive_data_return == NULL){

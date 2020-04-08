@@ -6,6 +6,7 @@
 #include "MsgReceiver.hpp"
 #include "ROSUnit_Factory.hpp"
 #include "ROSUnit_OrientationSubscriber.hpp"
+#include "ROSUnit_UpdateController.hpp"
 
 int main(int argc, char** argv) {
 
@@ -23,7 +24,7 @@ int main(int argc, char** argv) {
     ROSUnit* ros_controloutput_sub = new ROSUnit_ControlOutputSubscriber(nh);
     //TODO remove this, it's only for testing. I have no bag file with the new topic for roll
     ROSUnit* ros_orientation_sub = new ROSUnit_OrientationSubscriber(nh);
-
+    ROSUnit* ros_updt_ctr = new ROSUnit_UpdateController(nh);
 
     ROSUnit_Factory ROSUnit_Factory_main{nh};
     ROSUnit* rosunit_x_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
@@ -61,7 +62,12 @@ int main(int argc, char** argv) {
     ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)pitch_identification_node);
     ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)pitch_identification_node);   
     ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)z_identification_node);
-    ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)z_identification_node);   
+    ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)z_identification_node);  
+
+    roll_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr);
+    pitch_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr); 
+    z_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr); 
+
 
 
     Timer tempo;
