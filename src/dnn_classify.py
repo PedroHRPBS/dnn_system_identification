@@ -14,8 +14,7 @@ bn_2_params = [mat['bn_2_scale'], mat['bn_2_offset'], mat['bn_2_mean'], mat['bn_
 systems = mat['systems']
 
 #Defining layers
-input_layer = tf.keras.layers.Flatten(input_shape=(2260, 1, 2))
-fc_layer_1 = tf.keras.layers.Dense(3000)
+fc_layer_1 = tf.keras.layers.Dense(3000,input_shape=(1,4520))
 relu_1 = tf.keras.layers.ReLU()
 batchnorm_1 = tf.keras.layers.BatchNormalization()
 dropout_1 = tf.keras.layers.Dropout(rate=0.4)
@@ -28,7 +27,6 @@ softmax = tf.keras.layers.Softmax()
 
 #Adding layers to model
 nn_model = tf.keras.models.Sequential()
-nn_model.add(input_layer)
 nn_model.add(fc_layer_1)
 nn_model.add(relu_1)
 nn_model.add(batchnorm_1)
@@ -44,11 +42,12 @@ nn_model.add(softmax)
 nn_model.compile(loss='mse', optimizer='adam')
 
 #Updating the parameters with the ones from the trained network
-nn_model_fc_1 = nn_model.layers[1]
-nn_model_fc_2 = nn_model.layers[5]
-nn_model_fc_3 = nn_model.layers[9]
-nn_model_bn_1 = nn_model.layers[3]
-nn_model_bn_2 = nn_model.layers[7]
+nn_model_fc_1 = nn_model.layers[0]
+nn_model_fc_2 = nn_model.layers[4]
+nn_model_fc_3 = nn_model.layers[8]
+nn_model_bn_1 = nn_model.layers[2]
+nn_model_bn_2 = nn_model.layers[6]
+
 nn_model_fc_1.set_weights(fc_1_params)
 nn_model_fc_2.set_weights(fc_2_params)
 nn_model_fc_3.set_weights(fc_3_params)

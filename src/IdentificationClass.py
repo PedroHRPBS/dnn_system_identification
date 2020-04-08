@@ -134,15 +134,14 @@ class Identification:
         # print(normalized_control_timeseries)
         # print(normalized_error_timeseries)
 
-        self.dnn_classify(normalized_error_timeseries, normalized_control_timeseries, SCALED_GAIN)
+        input_layer = np.concatenate((normalized_error_timeseries, normalized_control_timeseries), axis=0)
 
-    def dnn_classify(self, normalized_error_timeseries, normalized_control_timeseries, scaled_gain):
+        self.dnn_classify(input_layer, SCALED_GAIN)
+
+    def dnn_classify(self, input_layer, scaled_gain):
 
         # Format input to comply with neural network
-        pv_data_array = np.asarray(normalized_error_timeseries)
-        command_data_array = np.asarray(normalized_control_timeseries)
-        input_data = np.dstack([np.vstack(pv_data_array), np.vstack(command_data_array)])
-        input_data = input_data.reshape(1, 2260, 1, 2)
+        input_data = input_layer.reshape(1, 1, 4520)
 
         prediction = self.dnn_model.predict(input_data)
         classification = np.argmax(prediction)
