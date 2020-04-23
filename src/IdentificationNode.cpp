@@ -47,13 +47,13 @@ void IdentificationNode::callPython(double t_pv, double t_u){
         _Kd = PyFloat_AsDouble(PyTuple_GetItem(py_receive_data_return, 1));
     
         if(_Kp > 0.0 && _Kd > 0.0){
-            printf("CS = %d: KP = %lf, KD = %lf\n", (int)_cs_type, _Kp, _Kd);
-            //_enabled = false;
+            //printf("CS = %d: KP = %lf, KD = %lf\n", (int)_cs_type, _Kp, _Kd);
+            _enabled = false;
             
             ControllerMessage _pid_parameters_message;
 
             pid_data.kp = _Kp;
-            pid_data.ki = 0.0;
+            pid_data.ki = -1.0;
             pid_data.kd = _Kd;
             pid_data.kdd = 0.0;
             pid_data.anti_windup = 0.0;

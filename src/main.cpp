@@ -65,6 +65,10 @@ int main(int argc, char** argv) {
     ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)z_identification_node);
     ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)z_identification_node);  
 
+    roll_identification_node->setEmittingChannel(ROSUnit_UpdateController::receiving_channels::pid);
+    pitch_identification_node->setEmittingChannel(ROSUnit_UpdateController::receiving_channels::pid);
+    z_identification_node->setEmittingChannel(ROSUnit_UpdateController::receiving_channels::pid);
+
     roll_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr);
     pitch_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr); 
     z_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr); 

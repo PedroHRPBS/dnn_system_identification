@@ -150,8 +150,8 @@ class Identification:
         self.__T1 = temp_system[1]
         self.__T2 = temp_system[2]
         self.__tau = temp_system[3]
-        self.__Kp = temp_system[7] * scaled_gain
-        self.__Kd = temp_system[8] * scaled_gain
+        self.__Kp = temp_system[7] * scaled_gain * 4 / np.pi
+        self.__Kd = temp_system[8] * scaled_gain * 4 / np.pi
         self.__Ki = 0
         print("")
         print("CLASS: ", classification, "KP: ", self.__Kp, "KD: ", self.__Kd, "Scaled Gain: ", scaled_gain)
