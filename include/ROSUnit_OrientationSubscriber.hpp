@@ -1,7 +1,7 @@
 #pragma once
-#include "ROSUnit.hpp"
+#include "common_srv/ROSUnit.hpp"
 #include <geometry_msgs/PointStamped.h>
-#include "Vector3DMessage.hpp"
+#include "common_srv/Vector3DMessage.hpp"
 
 class ROSUnit_OrientationSubscriber : public ROSUnit {
 

@@ -3,11 +3,11 @@
 #include "Python.h"
 #include "ROSUnit_ControlOutputSubscriber.hpp"
 #include "IdentificationNode.hpp"
-#include "MsgReceiver.hpp"
-#include "ROSUnit_Factory.hpp"
+#include "common_srv/MsgReceiver.hpp"
+#include "common_srv/ROSUnit_Factory.hpp"
 #include "ROSUnit_OrientationSubscriber.hpp"
 #include "ROSUnit_UpdateController.hpp"
-#include "Timer.hpp"
+#include "common_srv/Timer.hpp"
 
 int main(int argc, char** argv) {
 

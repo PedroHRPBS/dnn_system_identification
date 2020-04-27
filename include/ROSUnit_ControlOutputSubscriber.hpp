@@ -1,7 +1,7 @@
 #pragma once
-#include "ROSUnit.hpp"
+#include "common_srv/ROSUnit.hpp"
 #include <std_msgs/Float64MultiArray.h>
-#include "VectorDoubleMsg.hpp"
+#include "common_srv/VectorDoubleMsg.hpp"
 
 class ROSUnit_ControlOutputSubscriber : public ROSUnit{
 

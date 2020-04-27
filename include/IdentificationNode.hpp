@@ -1,8 +1,8 @@
 #pragma once
-#include "VectorDoubleMsg.hpp"
-#include "Vector3DMessage.hpp"
-#include "MsgReceiver.hpp"
-#include "MsgEmitter.hpp"
+#include "common_srv/VectorDoubleMsg.hpp"
+#include "common_srv/Vector3DMessage.hpp"
+#include "common_srv/MsgReceiver.hpp"
+#include "common_srv/MsgEmitter.hpp"
 #include "Python.h"
 #include "ros/ros.h"
 #include "ControllerMessage.hpp"

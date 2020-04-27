@@ -1,15 +1,6 @@
 #pragma once
 #include <stdint.h>
 
-//TODO move msg_type to DataMessage.hpp
-enum class msg_type {UAV_CONTROL_STATE, INTEGER, ERROR, INFO, FLIGHTCOMMAND, SWITCHBLOCK, UPDATECONTROLLER, 
-					arm_update, RestControllerMessage, SwitchBlock,MessageToBlock,TESTMSG, SERIALDATA, 
-					reference, THREEAXISSENSORMSG, VELOCITY, ACCELERATION, THERMALIMAGE, optitrack, 
-					FLIGHTSCENARIO, POSITION, ATTITUDE, HEADING, NOZZLEMSG,control_system, USERREFERENCE, 
-					controller, float_msg, switcher, VECTOR3D, external_reference, ack,internal_msg_start, 
-					internal_ros, pid_data_update, FLOAT, POSE, VECTOR, TAGGEDPOSES, POSES, POINTS, EMPTY, RESTNORMREF_SETTINGS,
-					VECTOR2D, FILTER_POINT, VECTORDOUBLE, DOUBLE, BOOLEAN};
-
 enum class block_id {PID_X=0, PID_Y=1, PID_Z=2, PID_ROLL=3, PID_PITCH=4, 
 					PID_YAW=5, PID_YAW_RATE=6, REF_Y=7, REF_Z=8, REF_ROLL=9, REF_PITCH=10, 
 					REF_YAW=11, PID_PITCH_RATE = 12, REF_X = 13,

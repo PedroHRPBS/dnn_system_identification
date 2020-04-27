@@ -38,14 +38,12 @@ catkin_package(
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../../catkin_ws_NAVIO/src/flight_controller/include/ROSUnits
   ${catkin_INCLUDE_DIRS}
   ${PYTHON_INCLUDE_DIRS}
 )
 
 FILE(GLOB SOURCE_FILES *.hpp *.cpp *.h
         ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../catkin_ws_NAVIO/src/flight_controller/src/ROSUnits/*.cpp
         )
 
 add_executable(${PROJECT_NAME} src/main.cpp ${SOURCE_FILES})
