@@ -46,13 +46,13 @@ void IdentificationNode::callPython(double t_pv, double t_u){
     
         _Kp = PyFloat_AsDouble(PyTuple_GetItem(py_receive_data_return, 0));
         _Kd = PyFloat_AsDouble(PyTuple_GetItem(py_receive_data_return, 1));
-        _system_class = PyFloat_AsDouble(PyTuple_GetItem(py_receive_data_return, 2));
+        _system_class = PyInt_AsLong(PyTuple_GetItem(py_receive_data_return, 2));
     
         if(_Kp > 0.0 && _Kd > 0.0){
             //printf("CS = %d: KP = %lf, KD = %lf\n", (int)_cs_type, _Kp, _Kd);
             _enabled = false;
             
-            ControllerMessage _pid_parameters_message;
+            ControllerMessage pid_parameters_message;
 
             pid_data.kp = _Kp;
             pid_data.ki = -1.0;
@@ -62,9 +62,13 @@ void IdentificationNode::callPython(double t_pv, double t_u){
             pid_data.en_pv_derivation = 1.0;
             pid_data.id = static_cast<block_id>(_cs_type);
 
-            _pid_parameters_message.setPIDParam(this->pid_data);
-            this->emitMsgUnicast((DataMessage*)&_pid_parameters_message, unicast_addresses::ros);
-            this->emitMsgUnicast((DataMessage*)&_pid_parameters_message, unicast_addresses::id_node);
+            pid_parameters_message.setPIDParam(this->pid_data);
+            this->emitMsgUnicast((DataMessage*)&pid_parameters_message, unicast_addresses::ros);
+
+            IntegerMsg system_class_msg;
+            system_class_msg.data = _system_class;
+
+            this->emitMsgUnicast((DataMessage*)&system_class_msg, unicast_addresses::id_node);
             
         }
     
@@ -73,6 +77,15 @@ void IdentificationNode::callPython(double t_pv, double t_u){
         }
         //tempo.tick();
     }
+}
+
+void IdentificationNode::setDNNModelinPython(const char* t_dnn_model_path, const char* t_system_classes_path){
+
+    PyObject* dnn_model_path = PyString_FromString(t_dnn_model_path);
+    PyObject* system_classes_path = PyString_FromString(t_system_classes_path);
+    PyObject* method_name = PyString_FromString("update_dnn_model_and_system");
+    PyObject_CallMethodObjArgs(this->_my_identifier, method_name, dnn_model_path, system_classes_path, NULL);
+
 }
 
 void IdentificationNode::receiveMsgData(DataMessage* t_msg){
@@ -91,8 +104,14 @@ void IdentificationNode::receiveMsgData(DataMessage* t_msg){
         //tempo2.tick();
         //this->emitMsgUnicastDefault(vector3d_msg);
         this->callPython(_PV, _u);
+
+    }else if(t_msg->getType() == msg_type::INTEGER){
+        IntegerMsg* integer_msg = (IntegerMsg*)t_msg;
+        int classification = integer_msg->data;
+        _enabled = true;
         
-    
+        this->setDNNModelinPython(dnn_model_paths[classification], system_class_paths[classification]);
+
     }
 
 }

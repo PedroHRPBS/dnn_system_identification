@@ -7,7 +7,7 @@
             },
             "includePath": [
                 "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/include/**",
-                "/home/pedrohrpbs/catkin_ws_NAVIO/src/flight_controller/include/ROSUnits/**"
+                "/home/pedrohrpbs/catkin_ws_NAVIO/src/common_srv/include/common_srv/**"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",
