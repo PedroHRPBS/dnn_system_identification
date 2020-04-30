@@ -17,9 +17,11 @@ private:
     PID_parameters pid_data;
 
 public:
+    enum unicast_addresses {id_node, ros};
     void receiveMsgData(DataMessage* t_msg);
     void callPython(double, double);
     void initializePython();
-    IdentificationNode(control_system, double);
+    IdentificationNode(control_system, double, bool);
     ~IdentificationNode();
+    
 };

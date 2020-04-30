@@ -5,9 +5,10 @@ Timer tempo;
 Timer tempo2;
 Timer tempo3;
 
-IdentificationNode::IdentificationNode(control_system t_cs, double t_h_mrft) {
+IdentificationNode::IdentificationNode(control_system t_cs, double t_h_mrft, bool t_enabled) {
     _cs_type = t_cs;
     _h_mrft = t_h_mrft;
+    _enabled = t_enabled;
     this->initializePython();
 }
 
@@ -61,7 +62,9 @@ void IdentificationNode::callPython(double t_pv, double t_u){
             pid_data.id = static_cast<block_id>(_cs_type);
 
             _pid_parameters_message.setPIDParam(this->pid_data);
-            this->emitMsgUnicastDefault((DataMessage*)&_pid_parameters_message);
+            this->emitMsgUnicast((DataMessage*)&_pid_parameters_message, unicast_addresses::ros);
+            this->emitMsgUnicast((DataMessage*)&_pid_parameters_message, unicast_addresses::id_node);
+            
         }
     
         if(py_receive_data_return == NULL){

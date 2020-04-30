@@ -12,8 +12,8 @@ import tensorflow as tf
 class Identification:
      
     def __init__(self, t_h_mrft):
-        self.dnn_model = tf.keras.models.load_model('/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/model.h5')
-        self.systems = np.loadtxt('/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/systems_truth_table.csv', delimiter=',')
+        self.__dnn_model = tf.keras.models.load_model('/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/model.h5')
+        self.__systems = np.loadtxt('/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/systems_truth_table.csv', delimiter=',')
         self.__MRFT_command = deque([], 40000) #Considering data is received at 400Hz max, 100seg of data is more than enough
         self.__MRFT_error = deque([], 40000)
         self.__MRFT_time = deque([], 40000)
@@ -21,6 +21,10 @@ class Identification:
         self.__rise_edge_times = []
         self.__h_mrft = t_h_mrft #Change this depending on the defined amplitude of MRFT
         self.__T1 = -1.0; self.__T2 = -1.0; self.__tau = -1.0; self.__Kp = -1.0; self.__Kd = -1.0; self.__Ki = -1.0
+
+    def update_dnn_model_and_system(self, dnn_model_path, systems_path):
+        self.__dnn_model = tf.keras.models.load_model(dnn_model_path)
+        self.__systems = np.loadtxt(systems_path, delimiter=',')
 
     def get_MRFT_amp(self):
         return self.__h_mrft
@@ -143,10 +147,10 @@ class Identification:
         # Format input to comply with neural network
         input_data = input_layer.reshape(1, 1, 4520)
 
-        prediction = self.dnn_model.predict(input_data)
+        prediction = self.__dnn_model.predict(input_data)
         classification = np.argmax(prediction)
 
-        temp_system = self.systems[classification]
+        temp_system = self.__systems[classification]
         self.__T1 = temp_system[1]
         self.__T2 = temp_system[2]
         self.__tau = temp_system[3]

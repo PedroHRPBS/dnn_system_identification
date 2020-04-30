@@ -54,23 +54,25 @@ int main(int argc, char** argv) {
                                                                     "/teste");
 
 
-    IdentificationNode* roll_identification_node = new IdentificationNode(control_system::roll, 0.04);
-    IdentificationNode* pitch_identification_node = new IdentificationNode(control_system::pitch, 0.04);
-    IdentificationNode* z_identification_node = new IdentificationNode(control_system::z, 0.1);
+    IdentificationNode* roll_identification_node = new IdentificationNode(control_system::roll, 0.04, true);
+    IdentificationNode* pitch_identification_node = new IdentificationNode(control_system::pitch, 0.04, true);
+    IdentificationNode* z_identification_node = new IdentificationNode(control_system::z, 0.1, true);
+    IdentificationNode* x_identification_node = new IdentificationNode(control_system::x, 0.1, false);
+    IdentificationNode* y_identification_node = new IdentificationNode(control_system::y, 0.1, false);
+
 
     ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);
     ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);   
     ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)pitch_identification_node);
     ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)pitch_identification_node);   
     ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)z_identification_node);
-    ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)z_identification_node);  
+    ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)z_identification_node); 
 
-    roll_identification_node->setEmittingChannel(ROSUnit_UpdateController::receiving_channels::pid);
-    pitch_identification_node->setEmittingChannel(ROSUnit_UpdateController::receiving_channels::pid);
-    z_identification_node->setEmittingChannel(ROSUnit_UpdateController::receiving_channels::pid);
+    roll_identification_node->addCallbackMsgReceiver((MsgReceiver*)x_identification_node, (int)IdentificationNode::unicast_addresses::id_node);
+    pitch_identification_node->addCallbackMsgReceiver((MsgReceiver*)y_identification_node, (int)IdentificationNode::unicast_addresses::id_node); 
 
-    roll_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr);
-    pitch_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr); 
+    roll_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr, (int)IdentificationNode::unicast_addresses::ros);
+    pitch_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr, (int)IdentificationNode::unicast_addresses::ros); 
     z_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr); 
 
 
