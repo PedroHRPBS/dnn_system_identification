@@ -110,7 +110,10 @@ void IdentificationNode::receiveMsgData(DataMessage* t_msg){
         int classification = integer_msg->data;
         _enabled = true;
         
-        this->setDNNModelinPython(dnn_model_paths[classification], system_class_paths[classification]);
+        std::string dnn_model_path = "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/" +  std::to_string(classification) + "/model.h5";
+        std::string system_class_path = "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/" +  std::to_string(classification) + "/systems_truth_table.csv";
+
+        this->setDNNModelinPython(dnn_model_path.c_str(), system_class_path.c_str());
 
     }
 
