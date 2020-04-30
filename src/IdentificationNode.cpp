@@ -46,6 +46,7 @@ void IdentificationNode::callPython(double t_pv, double t_u){
     
         _Kp = PyFloat_AsDouble(PyTuple_GetItem(py_receive_data_return, 0));
         _Kd = PyFloat_AsDouble(PyTuple_GetItem(py_receive_data_return, 1));
+        _system_class = PyFloat_AsDouble(PyTuple_GetItem(py_receive_data_return, 2));
     
         if(_Kp > 0.0 && _Kd > 0.0){
             //printf("CS = %d: KP = %lf, KD = %lf\n", (int)_cs_type, _Kp, _Kd);

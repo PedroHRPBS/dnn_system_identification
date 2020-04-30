@@ -20,7 +20,7 @@ class Identification:
         self.__MRFT_error_params = []
         self.__rise_edge_times = []
         self.__h_mrft = t_h_mrft #Change this depending on the defined amplitude of MRFT
-        self.__T1 = -1.0; self.__T2 = -1.0; self.__tau = -1.0; self.__Kp = -1.0; self.__Kd = -1.0; self.__Ki = -1.0
+        self.__T1 = -1.0; self.__T2 = -1.0; self.__tau = -1.0; self.__Kp = -1.0; self.__Kd = -1.0; self.__Ki = -1.0; self.__system_class = -1
 
     def update_dnn_model_and_system(self, dnn_model_path, systems_path):
         self.__dnn_model = tf.keras.models.load_model(dnn_model_path)
@@ -40,7 +40,7 @@ class Identification:
 
         self.detect_rise_edges(t_time)
 
-        return (self.__Kp, self.__Kd)
+        return (self.__Kp, self.__Kd, self.__system_class)
 
 
     def detect_rise_edges(self, t_time):
@@ -148,9 +148,9 @@ class Identification:
         input_data = input_layer.reshape(1, 1, 4520)
 
         prediction = self.__dnn_model.predict(input_data)
-        classification = np.argmax(prediction)
+        self.__system_class = np.argmax(prediction)
 
-        temp_system = self.__systems[classification]
+        temp_system = self.__systems[self.__system_class]
         self.__T1 = temp_system[1]
         self.__T2 = temp_system[2]
         self.__tau = temp_system[3]
@@ -158,7 +158,7 @@ class Identification:
         self.__Kd = temp_system[8] * scaled_gain * 4 / np.pi
         self.__Ki = 0
         print("")
-        print("CLASS: ", classification, "KP: ", self.__Kp, "KD: ", self.__Kd, "Scaled Gain: ", scaled_gain)
+        print("CLASS: ", self.__system_class, "KP: ", self.__Kp, "KD: ", self.__Kd, "Scaled Gain: ", scaled_gain)
         print("")
 
 

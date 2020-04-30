@@ -11,6 +11,7 @@ class IdentificationNode : public MsgEmitter, public MsgReceiver{
 
 private:
     double _PV, _u, _Kp, _Kd, _h_mrft;
+    int _system_class;
     control_system _cs_type;
     PyObject* _my_identifier;
     bool _enabled = true;
