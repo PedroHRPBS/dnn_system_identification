@@ -14,15 +14,15 @@ bn_2_params = [mat['bn_2_scale'], mat['bn_2_offset'], mat['bn_2_mean'], mat['bn_
 #systems = mat['systems']
 
 #Defining layers
-fc_layer_1 = tf.keras.layers.Dense(3000,input_shape=(1,5000))
+fc_layer_1 = tf.keras.layers.Dense(np.array(fc_1_params[0]).shape[1],input_shape=(1,np.array(fc_1_params[0]).shape[0]))
 relu_1 = tf.keras.layers.ReLU()
 batchnorm_1 = tf.keras.layers.BatchNormalization()
 dropout_1 = tf.keras.layers.Dropout(rate=0.4)
-fc_layer_2 = tf.keras.layers.Dense(1000)
+fc_layer_2 = tf.keras.layers.Dense(np.array(fc_2_params[0]).shape[1])
 relu_2 = tf.keras.layers.ReLU()
 batchnorm_2 = tf.keras.layers.BatchNormalization()
 dropout_2 = tf.keras.layers.Dropout(rate=0.4)
-final_layer = tf.keras.layers.Dense(16)
+final_layer = tf.keras.layers.Dense(np.array(fc_3_params[0]).shape[1])
 softmax = tf.keras.layers.Softmax()
 
 #Adding layers to model
