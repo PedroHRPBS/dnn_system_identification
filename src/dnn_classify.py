@@ -6,11 +6,11 @@ import keras
 
 import os
 
-filenames= os.listdir (".") # get all files' and folders' names in the current directory
+filenames = os.listdir ("./DNNs") # get all files' and folders' names in the current directory
 
 result = []
 for filename in filenames: # loop through all the files and folders
-    if os.path.isdir(os.path.join(os.path.abspath("."), filename)): # check whether the current object is a folder or not
+    if os.path.isdir(os.path.join(os.path.abspath("./DNNs"), filename)): # check whether the current object is a folder or not
         result.append(filename)
         
 result.sort()
@@ -18,13 +18,13 @@ result.sort()
 for folder in result[:-1]:
 
     #Load data from matlab file
-    mat = spio.loadmat('DNNs/'+folder+'/dnn_data.mat', squeeze_me=True)
+    mat = spio.loadmat('DNNs/'+str(folder)+'/dnn_data.mat', squeeze_me=True)
     fc_1_params = [mat['fc_1_w'].T, mat['fc_1_b']]
     fc_2_params = [mat['fc_2_w'].T, mat['fc_2_b']]
     fc_3_params = [mat['fc_3_w'].T, mat['fc_3_b']]
     bn_1_params = [mat['bn_1_scale'], mat['bn_1_offset'], mat['bn_1_mean'], mat['bn_1_variance']]
     bn_2_params = [mat['bn_2_scale'], mat['bn_2_offset'], mat['bn_2_mean'], mat['bn_2_variance']]
-    systems = mat['systems']
+    systems = mat['systems_classes']
 
     #Defining layers
     fc_layer_1 = tf.keras.layers.Dense(np.array(fc_1_params[0]).shape[1],input_shape=(1,np.array(fc_1_params[0]).shape[0]))
@@ -67,12 +67,16 @@ for folder in result[:-1]:
     nn_model_bn_1.set_weights(bn_1_params)
     nn_model_bn_2.set_weights(bn_2_params)
 
-    nn_model.save('DNNs/'+folder+'/model.h5')
+    nn_model.save('DNNs/'+str(folder)+'/model.h5')
     print("MODEL SAVED TO model.h5")
 
     # save to csv file
-    np.savetxt('DNNs/'+folder+'/systems_truth_table.csv', systems, delimiter=',')
+    np.savetxt('DNNs/'+str(folder)+'/systems_truth_table.csv', systems, delimiter=',')
     print("Systems Truth Table saved to systems_truth_table.csv")
 
-        
+
+
+
+
+
 
