@@ -73,10 +73,3 @@ for folder in result[:-1]:
     # save to csv file
     np.savetxt('DNNs/'+str(folder)+'/systems_truth_table.csv', systems, delimiter=',')
     print("Systems Truth Table saved to systems_truth_table.csv")
-
-
-
-
-
-
-
