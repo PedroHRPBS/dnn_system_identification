@@ -153,12 +153,11 @@ class Identification:
 
         # Format input to comply with neural network
         input_data = input_layer.reshape(1, 1, 5000)
-        print("before predict")
 
         prediction = self.__dnn_model.predict(input_data)
         self.__system_class = np.argmax(prediction)
-        print("after predict")
         temp_system = self.__systems[self.__system_class]
+        
         # each row is a process, column are: K T tau P I D
         self.__K = temp_system[0]
         self.__T = temp_system[1]

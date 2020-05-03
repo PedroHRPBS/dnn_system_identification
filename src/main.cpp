@@ -49,9 +49,9 @@ int main(int argc, char** argv) {
     ROSUnit* rosunit_yaw_rate_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/providers/yaw_rate");
-    ROSUnit* testando_tempo_loop = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Point,
-                                                                    "/teste");
+    ROSUnit* rosunit_dnn_confirmation = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Client,
+                                                                           ROSUnit_msg_type::ROSUnit_Int,
+                                                                           "/dnn_confirmation");
 
 
     IdentificationNode* roll_identification_node = new IdentificationNode(control_system::roll, 0.04, true);
@@ -82,8 +82,15 @@ int main(int argc, char** argv) {
 
     roll_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr, (int)IdentificationNode::unicast_addresses::ros);
     pitch_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr, (int)IdentificationNode::unicast_addresses::ros); 
-    z_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr); 
+    z_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr, (int)IdentificationNode::unicast_addresses::ros); 
+    x_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr, (int)IdentificationNode::unicast_addresses::ros); 
+    y_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr, (int)IdentificationNode::unicast_addresses::ros); 
 
+    roll_identification_node->addCallbackMsgReceiver((MsgReceiver*)rosunit_dnn_confirmation, (int)IdentificationNode::unicast_addresses::ros);
+    pitch_identification_node->addCallbackMsgReceiver((MsgReceiver*)rosunit_dnn_confirmation, (int)IdentificationNode::unicast_addresses::ros);
+    z_identification_node->addCallbackMsgReceiver((MsgReceiver*)rosunit_dnn_confirmation, (int)IdentificationNode::unicast_addresses::ros);
+    x_identification_node->addCallbackMsgReceiver((MsgReceiver*)rosunit_dnn_confirmation, (int)IdentificationNode::unicast_addresses::ros);
+    y_identification_node->addCallbackMsgReceiver((MsgReceiver*)rosunit_dnn_confirmation, (int)IdentificationNode::unicast_addresses::ros);
 
 
     Timer tempo;

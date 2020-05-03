@@ -65,6 +65,10 @@ void IdentificationNode::callPython(double t_pv, double t_u){
             pid_parameters_message.setPIDParam(this->pid_data);
             this->emitMsgUnicast((DataMessage*)&pid_parameters_message, unicast_addresses::ros);
 
+            IntegerMsg confirmation_msg;
+            confirmation_msg.data = (int)_cs_type;
+            this->emitMsgUnicast((DataMessage*)&confirmation_msg, unicast_addresses::ros);
+
             IntegerMsg system_class_msg;
             system_class_msg.data = _system_class;
             this->emitMsgUnicast((DataMessage*)&system_class_msg, unicast_addresses::id_node);
@@ -75,9 +79,9 @@ void IdentificationNode::callPython(double t_pv, double t_u){
             printf("Calling the add method failed.\n");
         }
 
-        if(_cs_type == control_system::x){
-            std::cout << "Receiving X data "  << std::endl;
-        }
+        // if(_cs_type == control_system::x){
+            // std::cout << "Receiving X data "  << std::endl;
+        // }
         //tempo.tick();
     }
 }
@@ -113,10 +117,10 @@ void IdentificationNode::receiveMsgData(DataMessage* t_msg){
         int classification = integer_msg->data;
         _enabled = true;
 
-        std::string dnn_model_path = "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/" +  std::to_string(classification) + "/model.h5";
-        std::string system_class_path = "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/" +  std::to_string(classification) + "/systems_truth_table.csv";
-        // std::string dnn_model_path = "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/" +  std::to_string(24) + "/model.h5";
-        // std::string system_class_path = "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/" +  std::to_string(24) + "/systems_truth_table.csv";
+        // std::string dnn_model_path = "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/" +  std::to_string(classification) + "/model.h5";
+        // std::string system_class_path = "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/" +  std::to_string(classification) + "/systems_truth_table.csv";
+        std::string dnn_model_path = "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/" +  std::to_string(24) + "/model.h5";
+        std::string system_class_path = "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/" +  std::to_string(24) + "/systems_truth_table.csv";
 
         this->setDNNModelinPython(dnn_model_path.c_str(), system_class_path.c_str());
 
