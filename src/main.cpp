@@ -55,8 +55,17 @@ int main(int argc, char** argv) {
 
 
     IdentificationNode* roll_identification_node = new IdentificationNode(control_system::roll, 0.04, true);
+    roll_identification_node->setDNNModelinPython("/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/inner/model.h5", 
+                                                  "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/inner/systems_truth_table.csv");
+
     IdentificationNode* pitch_identification_node = new IdentificationNode(control_system::pitch, 0.04, true);
+    pitch_identification_node->setDNNModelinPython("/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/inner/model.h5", 
+                                                   "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/inner/systems_truth_table.csv");
+
     IdentificationNode* z_identification_node = new IdentificationNode(control_system::z, 0.1, true);
+    z_identification_node->setDNNModelinPython("/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/z/model.h5", 
+                                               "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/z/systems_truth_table.csv");
+
     IdentificationNode* x_identification_node = new IdentificationNode(control_system::x, 0.1, false);
     IdentificationNode* y_identification_node = new IdentificationNode(control_system::y, 0.1, false);
 

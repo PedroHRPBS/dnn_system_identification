@@ -12,19 +12,26 @@ import tensorflow as tf
 class Identification:
      
     def __init__(self, t_h_mrft):
-        self.__dnn_model = tf.keras.models.load_model('/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/model.h5')
-        self.__systems = np.loadtxt('/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/systems_truth_table.csv', delimiter=',')
+        self.__dnn_model_path = '/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/z/model.h5'
+        self.__systems_path = '/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/z/systems_truth_table.csv'
+        self.__dnn_model = tf.keras.models.load_model(self.__dnn_model_path)
+        self.__systems = np.loadtxt(self.__systems_path, delimiter=',')
         self.__MRFT_command = deque([], 40000) #Considering data is received at 400Hz max, 100seg of data is more than enough
         self.__MRFT_error = deque([], 40000)
         self.__MRFT_time = deque([], 40000)
         self.__MRFT_error_params = []
         self.__rise_edge_times = []
         self.__h_mrft = t_h_mrft #Change this depending on the defined amplitude of MRFT
-        self.__T1 = -1.0; self.__T2 = -1.0; self.__tau = -1.0; self.__Kp = -1.0; self.__Kd = -1.0; self.__Ki = -1.0; self.__system_class = -1
+        self.__K = -1.0; self.__T = -1.0; self.__tau = -1.0; self.__Kp = -1.0; self.__Kd = -1.0; self.__Ki = -1.0
+        self.__system_class = -1
 
     def update_dnn_model_and_system(self, dnn_model_path, systems_path):
-        self.__dnn_model = tf.keras.models.load_model(dnn_model_path)
-        self.__systems = np.loadtxt(systems_path, delimiter=',')
+        self.__dnn_model_path = dnn_model_path
+        self.__systems_path = systems_path
+        print("Model loaded: "+self.__dnn_model_path)
+        print("Systems loaded: "+self.__systems_path)
+        self.__dnn_model = tf.keras.models.load_model(self.__dnn_model_path)
+        self.__systems = np.loadtxt(self.__systems_path, delimiter=',')
 
     def get_MRFT_amp(self):
         return self.__h_mrft
@@ -111,7 +118,7 @@ class Identification:
         self.pre_process_data(control_interp, error_interp)
 
     def pre_process_data(self, control_timeseries, error_timeseries):
-        sample_size = 2260
+        sample_size = 2500
         h_mrft_control = (max(control_timeseries)-min(control_timeseries)) / 2.0
         h_mrft_error = (max(error_timeseries)-min(error_timeseries)) / 2.0
         
@@ -145,21 +152,24 @@ class Identification:
     def dnn_classify(self, input_layer, scaled_gain):
 
         # Format input to comply with neural network
-        input_data = input_layer.reshape(1, 1, 4520)
+        input_data = input_layer.reshape(1, 1, 5000)
+        print("before predict")
 
         prediction = self.__dnn_model.predict(input_data)
         self.__system_class = np.argmax(prediction)
-
+        print("after predict")
         temp_system = self.__systems[self.__system_class]
-        self.__T1 = temp_system[1]
-        self.__T2 = temp_system[2]
-        self.__tau = temp_system[3]
-        self.__Kp = temp_system[7] * scaled_gain * 4 / np.pi
-        self.__Kd = temp_system[8] * scaled_gain * 4 / np.pi
-        self.__Ki = 0
+        # each row is a process, column are: K T tau P I D
+        self.__K = temp_system[0]
+        self.__T = temp_system[1]
+        self.__tau = temp_system[2]
+        self.__Kp = temp_system[3] * scaled_gain * 4 / np.pi
+        self.__Ki = temp_system[4] * scaled_gain * 4 / np.pi
+        self.__Kd = temp_system[5] * scaled_gain * 4 / np.pi
         print("")
         print("CLASS: ", self.__system_class, "KP: ", self.__Kp, "KD: ", self.__Kd, "Scaled Gain: ", scaled_gain)
         print("")
+
 
 
 def return_instance(t_h_mrft):
