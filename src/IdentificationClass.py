@@ -68,8 +68,8 @@ class Identification:
                 self.__MRFT_error_params.append((max_peak, min_peak, period)) #Params is a tuple (Max peak, Min peak, Period)
 
                 print("self.__MRFT_error_params:", self.__MRFT_error_params[-1])
-
-                self.detect_steady_state(signal_start, signal_end)
+                if (max_peak - min_peak > 0.07):    #Check for at least 4deg of difference between max and min. This is to avoid flat signal.
+                    self.detect_steady_state(signal_start, signal_end)
 
     def detect_steady_state(self, signal_start, signal_end, samples=3):
         if len(self.__MRFT_error_params) > samples: #Testing consistency of data to detect steady state, the test is done by checking the standard deviation of params

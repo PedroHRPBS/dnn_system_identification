@@ -69,13 +69,15 @@ int main(int argc, char** argv) {
     IdentificationNode* x_identification_node = new IdentificationNode(control_system::x, 0.1, false);
     IdentificationNode* y_identification_node = new IdentificationNode(control_system::y, 0.1, false);
 
-
     ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);
-    ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);   
+    rosunit_roll_provider->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);   
     ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)pitch_identification_node);
-    ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)pitch_identification_node);   
+    rosunit_pitch_provider->addCallbackMsgReceiver((MsgReceiver*)pitch_identification_node);   
     ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)z_identification_node);
-    ros_orientation_sub->addCallbackMsgReceiver((MsgReceiver*)z_identification_node); 
+    rosunit_z_provider->addCallbackMsgReceiver((MsgReceiver*)z_identification_node);
+    rosunit_x_provider->addCallbackMsgReceiver((MsgReceiver*)x_identification_node); 
+    rosunit_y_provider->addCallbackMsgReceiver((MsgReceiver*)y_identification_node); 
+
 
     roll_identification_node->addCallbackMsgReceiver((MsgReceiver*)x_identification_node, (int)IdentificationNode::unicast_addresses::id_node);
     pitch_identification_node->addCallbackMsgReceiver((MsgReceiver*)y_identification_node, (int)IdentificationNode::unicast_addresses::id_node); 
