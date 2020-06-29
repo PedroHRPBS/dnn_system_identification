@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: dnn_system_identification
+Description: Description of dnn_system_identification
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: roscpp std_msgs message_runtime common_srv tensorflow

@@ -1,0 +1,8 @@
+prefix=/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/build/devel
+
+Name: dnn_system_identification
+Description: Description of dnn_system_identification
+Version: 0.0.0
+Cflags: -I/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/include
+Libs: -L${prefix}/lib 
+Requires: roscpp std_msgs message_runtime common_srv tensorflow
