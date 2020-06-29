@@ -94,7 +94,7 @@ class Identification:
 
                         self.interpolate_data(control_timeseries, error_timeseries, timeseries)
 
-    def interpolate_data(self, control_timeseries, error_timeseries, timeseries):
+    def interpolate_data(self, control_timeseries, error_timeseries, timeseries):        
         # Interpolate
         initial_time = timeseries[0]
         x = [(i-initial_time)*1000 for i in timeseries] #Start from 0, and multiply by 1000, so 1 = 1ms
@@ -104,8 +104,9 @@ class Identification:
         control_interp = np.interp(xvals, x, control_timeseries)
 
         # Removing transition values
-        control_interp[control_interp>=0] = max(control_interp)
-        control_interp[control_interp<0] = min(control_interp)
+        half_way = max(control_interp)-self.__h_mrft
+        control_interp[control_interp>=half_way] = max(control_interp)
+        control_interp[control_interp<half_way] = min(control_interp)
 
         control_interp = control_interp.tolist()
         error_interp = error_interp.tolist()
@@ -118,10 +119,10 @@ class Identification:
         self.pre_process_data(control_interp, error_interp)
 
     def pre_process_data(self, control_timeseries, error_timeseries):
-        sample_size = 2500
+        sample_size = 2500 #TODO This should be different for Z
         h_mrft_control = (max(control_timeseries)-min(control_timeseries)) / 2.0
         h_mrft_error = (max(error_timeseries)-min(error_timeseries)) / 2.0
-        
+
         SCALED_GAIN = h_mrft_control / h_mrft_error
 
         # Zero center
@@ -129,7 +130,7 @@ class Identification:
         offset_error = ((max(error_timeseries) + min(error_timeseries)) / 2.0)
         control_timeseries_zero_center = [x-offset_control for x in control_timeseries]  
         error_timeseries_zero_center = [x-offset_error for x in error_timeseries]
-
+        
         # Normalize
         control_timeseries_max = max(control_timeseries_zero_center)
         error_timeseries_max = max(error_timeseries_zero_center)
@@ -150,9 +151,9 @@ class Identification:
         self.dnn_classify(input_layer, SCALED_GAIN)
 
     def dnn_classify(self, input_layer, scaled_gain):
-
+        print("DNN CLASSIFICATION")
         # Format input to comply with neural network
-        input_data = input_layer.reshape(1, 1, 5000)
+        input_data = input_layer.reshape(1, 1, 5000) #TODO This should be different for Z
 
         prediction = self.__dnn_model.predict(input_data)
         self.__system_class = np.argmax(prediction)
@@ -165,6 +166,10 @@ class Identification:
         self.__Kp = temp_system[3] * scaled_gain * 4 / np.pi
         self.__Ki = temp_system[4] * scaled_gain * 4 / np.pi
         self.__Kd = temp_system[5] * scaled_gain * 4 / np.pi
+       
+        # self.__Kp = temp_system[7] * scaled_gain * 4 / np.pi
+        # self.__Kd = temp_system[8] * scaled_gain * 4 / np.pi #TODO This should be different for Z
+
         print("")
         print("CLASS: ", self.__system_class, "KP: ", self.__Kp, "KD: ", self.__Kd, "Scaled Gain: ", scaled_gain)
         print("")
