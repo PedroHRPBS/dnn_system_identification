@@ -14,7 +14,7 @@ class Identification:
     def __init__(self, t_h_mrft):
         self.__dnn_model_path = '/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/z/model.h5'
         self.__systems_path = '/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/z/systems_truth_table.csv'
-        self.__dnn_model = tf.keras.models.load_model(self.__dnn_model_path)
+        self.__dnn_model = tf.keras.models.load_model(self.__dnn_model_path)    
         self.__systems = np.loadtxt(self.__systems_path, delimiter=',')
         self.__MRFT_command = deque([], 40000) #Considering data is received at 400Hz max, 100seg of data is more than enough
         self.__MRFT_error = deque([], 40000)
@@ -24,6 +24,7 @@ class Identification:
         self.__h_mrft = t_h_mrft #Change this depending on the defined amplitude of MRFT
         self.__K = -1.0; self.__T = -1.0; self.__tau = -1.0; self.__Kp = -1.0; self.__Kd = -1.0; self.__Ki = -1.0
         self.__system_class = -1
+        self.__first_layer_length = 0;
 
     def update_dnn_model_and_system(self, dnn_model_path, systems_path):
         self.__dnn_model_path = dnn_model_path
@@ -32,6 +33,7 @@ class Identification:
         print("Systems loaded: "+self.__systems_path)
         self.__dnn_model = tf.keras.models.load_model(self.__dnn_model_path)
         self.__systems = np.loadtxt(self.__systems_path, delimiter=',')
+        self.__first_layer_length = np.shape(self.__dnn_model.inputs[0])[2];
 
     def get_MRFT_amp(self):
         return self.__h_mrft
@@ -65,22 +67,26 @@ class Identification:
                 max_peak = max(list(itertools.islice(self.__MRFT_error, signal_start, signal_end)))
                 min_peak = min(list(itertools.islice(self.__MRFT_error, signal_start, signal_end)))
                 period = self.__rise_edge_times[-1][1] - self.__rise_edge_times[-2][1]
-                self.__MRFT_error_params.append((max_peak, min_peak, period)) #Params is a tuple (Max peak, Min peak, Period)
+
+                amplitude = max_peak - min_peak;
+                center_point = (max_peak + min_peak) / 2;
+
+                self.__MRFT_error_params.append((amplitude, center_point, period)) #Params is a tuple (Max peak, Min peak, Period)
 
                 print("self.__MRFT_error_params:", self.__MRFT_error_params[-1])
-                if (max_peak - min_peak > 0.07):    #Check for at least 4deg of difference between max and min. This is to avoid flat signal.
-                    self.detect_steady_state(signal_start, signal_end)
+                # if (amplitude > 0.01):    #Check for at least 1deg of difference between max and min. This is to avoid flat signal.
+                self.detect_steady_state(signal_start, signal_end)
 
     def detect_steady_state(self, signal_start, signal_end, samples=3):
         if len(self.__MRFT_error_params) > samples: #Testing consistency of data to detect steady state, the test is done by checking the standard deviation of params
                                         
-                max_peak_std = np.std([element[0] for element in self.__MRFT_error_params[-samples:]]) #Only get the standard deviation of the last samples (3) events
-                min_peak_std = np.std([element[1] for element in self.__MRFT_error_params[-samples:]])
+                amplitude_std = np.std([element[0] for element in self.__MRFT_error_params[-samples:]]) #Only get the standard deviation of the last samples (3) events
+                center_point_std = np.std([element[1] for element in self.__MRFT_error_params[-samples:]])
                 period_std = np.std([element[2] for element in self.__MRFT_error_params[-samples:]])
 
-                print(max_peak_std, min_peak_std, period_std)
+                print(amplitude_std, center_point_std, period_std)
 
-                if max_peak_std < 0.02 and min_peak_std < 0.02 and period_std < 0.02: #0.02 came from analysis of real data example where the algorithm was successful
+                if amplitude_std < 0.03 and center_point_std < 0.03 and period_std < 0.03: #0.02 came from analysis of real data example where the algorithm was successful
                         print("Steady State DETECTED")
                         control_timeseries = list(itertools.islice(self.__MRFT_command, signal_start, signal_end-1)) #-1 to remove the last rise edge
                         error_timeseries = list(itertools.islice(self.__MRFT_error, signal_start, signal_end-1))
@@ -119,7 +125,7 @@ class Identification:
         self.pre_process_data(control_interp, error_interp)
 
     def pre_process_data(self, control_timeseries, error_timeseries):
-        sample_size = 2500 #TODO This should be different for Z
+        sample_size = self.__first_layer_length/2 #TODO This should be different for Z
         h_mrft_control = (max(control_timeseries)-min(control_timeseries)) / 2.0
         h_mrft_error = (max(error_timeseries)-min(error_timeseries)) / 2.0
 
@@ -153,22 +159,24 @@ class Identification:
     def dnn_classify(self, input_layer, scaled_gain):
         print("DNN CLASSIFICATION")
         # Format input to comply with neural network
-        input_data = input_layer.reshape(1, 1, 5000) #TODO This should be different for Z
+        input_data = input_layer.reshape(1, 1, self.__first_layer_length) #TODO This should be different for Z
 
         prediction = self.__dnn_model.predict(input_data)
         self.__system_class = np.argmax(prediction)
         temp_system = self.__systems[self.__system_class]
         
-        # each row is a process, column are: K T tau P I D
-        self.__K = temp_system[0]
-        self.__T = temp_system[1]
-        self.__tau = temp_system[2]
-        self.__Kp = temp_system[3] * scaled_gain * 4 / np.pi
-        self.__Ki = temp_system[4] * scaled_gain * 4 / np.pi
-        self.__Kd = temp_system[5] * scaled_gain * 4 / np.pi
+        if self.__first_layer_length == 4520:
+            self.__Kp = temp_system[7] * scaled_gain * 4 / np.pi
+            self.__Kd = temp_system[8] * scaled_gain * 4 / np.pi #TODO This should be different for Z
        
-        # self.__Kp = temp_system[7] * scaled_gain * 4 / np.pi
-        # self.__Kd = temp_system[8] * scaled_gain * 4 / np.pi #TODO This should be different for Z
+        elif self.__first_layer_length == 5000:
+            # each row is a process, column are: K T tau P I D
+            self.__K = temp_system[0]
+            self.__T = temp_system[1]
+            self.__tau = temp_system[2]
+            self.__Kp = temp_system[3] * scaled_gain * 4 / np.pi
+            self.__Ki = temp_system[4] * scaled_gain * 4 / np.pi
+            self.__Kd = temp_system[5] * scaled_gain * 4 / np.pi
 
         print("")
         print("CLASS: ", self.__system_class, "KP: ", self.__Kp, "KD: ", self.__Kd, "Scaled Gain: ", scaled_gain)
