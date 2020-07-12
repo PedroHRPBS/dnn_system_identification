@@ -6,6 +6,11 @@
 },
 {
   "directory": "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/build",
+  "command": "/usr/bin/x86_64-linux-gnu-g++-7  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"dnn_system_identification\\\" -I/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/include -I/home/pedrohrpbs/catkin_ws_NAVIO/devel/include -I/home/pedrohrpbs/catkin_ws_NAVIO/src/common_srv/include -I/home/pedrohrpbs/catkin_ws_NAVIO/src/flight_controller/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/python2.7  -g   -std=c++11 -o CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o -c /home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/CheckCondition.cpp",
+  "file": "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/CheckCondition.cpp"
+},
+{
+  "directory": "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/build",
   "command": "/usr/bin/x86_64-linux-gnu-g++-7  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"dnn_system_identification\\\" -I/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/include -I/home/pedrohrpbs/catkin_ws_NAVIO/devel/include -I/home/pedrohrpbs/catkin_ws_NAVIO/src/common_srv/include -I/home/pedrohrpbs/catkin_ws_NAVIO/src/flight_controller/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/python2.7  -g   -std=c++11 -o CMakeFiles/dnn_system_identification.dir/src/ControllerMessage.cpp.o -c /home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/ControllerMessage.cpp",
   "file": "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/ControllerMessage.cpp"
 },

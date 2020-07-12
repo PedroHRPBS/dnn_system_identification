@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/dnn_system_identification.dir/src/main.cpp.o"
+  "CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o"
   "CMakeFiles/dnn_system_identification.dir/src/ControllerMessage.cpp.o"
   "CMakeFiles/dnn_system_identification.dir/src/IdentificationNode.cpp.o"
   "CMakeFiles/dnn_system_identification.dir/src/ROSUnit_ControlOutputSubscriber.cpp.o"

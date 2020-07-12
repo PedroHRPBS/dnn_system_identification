@@ -7,12 +7,13 @@
 #include "ros/ros.h"
 #include "ControllerMessage.hpp"
 #include "common_srv/IntegerMsg.hpp"
+#include "common_srv/BooleanMsg.hpp"
 
 class IdentificationNode : public MsgEmitter, public MsgReceiver{
 
 private:
     double _PV, _u, _Kp, _Kd, _h_mrft;
-    int _system_class;
+    int _system_class, _identification_done = 0;
     control_system _cs_type;
     PyObject* _my_identifier;
     bool _enabled = true;
@@ -21,6 +22,7 @@ private:
 public:
     enum unicast_addresses {id_node, ros};
     void receiveMsgData(DataMessage* t_msg);
+    void receiveMsgData(DataMessage* t_msg, int t_channel);
     void callPython(double, double);
     void initializePython();
     void setDNNModelinPython(const char*, const char*);

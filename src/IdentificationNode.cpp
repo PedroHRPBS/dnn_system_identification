@@ -37,7 +37,7 @@ void IdentificationNode::initializePython(){
 
 void IdentificationNode::callPython(double t_pv, double t_u){
 
-    if(_enabled){
+    if(_enabled && _identification_done == 0){
         PyObject* py_pv = PyFloat_FromDouble(t_pv);
         PyObject* py_u = PyFloat_FromDouble(t_u);
         PyObject* time_now = PyFloat_FromDouble(ros::Time::now().toSec());
@@ -47,15 +47,16 @@ void IdentificationNode::callPython(double t_pv, double t_u){
         _Kp = PyFloat_AsDouble(PyTuple_GetItem(py_receive_data_return, 0));
         _Kd = PyFloat_AsDouble(PyTuple_GetItem(py_receive_data_return, 1));
         _system_class = PyInt_AsLong(PyTuple_GetItem(py_receive_data_return, 2));
+        _identification_done = PyInt_AsLong(PyTuple_GetItem(py_receive_data_return, 3));
+
     
         if(_Kp > 0.0 && _Kd > 0.0){
-            //printf("CS = %d: KP = %lf, KD = %lf\n", (int)_cs_type, _Kp, _Kd);
-            _enabled = false;
+            printf("CS = %d: KP = %lf, KD = %lf\n", (int)_cs_type, _Kp, _Kd);
             
             ControllerMessage pid_parameters_message;
 
             pid_data.kp = _Kp;
-            pid_data.ki = -1.0;
+            pid_data.ki = 0.0;
             pid_data.kd = _Kd;
             pid_data.kdd = 0.0;
             pid_data.anti_windup = 0.0;
@@ -71,7 +72,7 @@ void IdentificationNode::callPython(double t_pv, double t_u){
 
             IntegerMsg system_class_msg;
             system_class_msg.data = _system_class;
-            this->emitMsgUnicast((DataMessage*)&system_class_msg, unicast_addresses::id_node);
+            this->emitMsgUnicast((DataMessage*)&system_class_msg, unicast_addresses::id_node, (int)_cs_type);
             
         }
     
@@ -79,10 +80,6 @@ void IdentificationNode::callPython(double t_pv, double t_u){
             printf("Calling the add method failed.\n");
         }
 
-        // if(_cs_type == control_system::x){
-            // std::cout << "Receiving X data "  << std::endl;
-        // }
-        //tempo.tick();
     }
 }
 
@@ -100,22 +97,27 @@ void IdentificationNode::receiveMsgData(DataMessage* t_msg){
     if(t_msg->getType() == msg_type::VECTORDOUBLE){
         VectorDoubleMsg* vector_double_msg = (VectorDoubleMsg*)t_msg;
         _u = vector_double_msg->data[(int)_cs_type];
-        //std::cout << "Tempo VECTORDOUBLE: " << tempo3.tockMicroSeconds() << "\n";
-        //tempo3.tick();
     
     }else if(t_msg->getType() == msg_type::VECTOR3D){
         Vector3DMessage* vector3d_msg = (Vector3DMessage*)t_msg;
-        //TODO change to .x after moving to the newest code
         _PV = vector3d_msg->getData().x;
-        //std::cout << "Tempo VECTOR3D: " << tempo2.tockMicroSeconds() << "\n";
-        //tempo2.tick();
-        //this->emitMsgUnicastDefault(vector3d_msg);
+        // std::cout << "PV: " << _PV << " u = " << _u << std::endl;
+
         this->callPython(_PV, _u);
 
-    }else if(t_msg->getType() == msg_type::INTEGER){
+    }else if(t_msg->getType() == msg_type::BOOLEAN){
+        BooleanMsg* bool_msg = (BooleanMsg*)t_msg;
+        _enabled = bool_msg->data;
+        // std::cout << "CHANNEL: " << (int)_cs_type << " ENABLED = " << _enabled << std::endl;
+    }
+
+}
+
+void IdentificationNode::receiveMsgData(DataMessage* t_msg, int t_channel){
+
+    if(t_msg->getType() == msg_type::INTEGER){
         IntegerMsg* integer_msg = (IntegerMsg*)t_msg;
         int classification = integer_msg->data;
-        _enabled = true;
 
         // std::string dnn_model_path = "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/" +  std::to_string(classification) + "/model.h5";
         // std::string system_class_path = "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/" +  std::to_string(classification) + "/systems_truth_table.csv";
@@ -123,7 +125,5 @@ void IdentificationNode::receiveMsgData(DataMessage* t_msg){
         std::string system_class_path = "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/" +  std::to_string(24) + "/systems_truth_table.csv";
 
         this->setDNNModelinPython(dnn_model_path.c_str(), system_class_path.c_str());
-
     }
-
 }

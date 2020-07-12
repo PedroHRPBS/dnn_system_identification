@@ -81,9 +81,33 @@ CMakeFiles/dnn_system_identification.dir/src/main.cpp.o.provides: CMakeFiles/dnn
 CMakeFiles/dnn_system_identification.dir/src/main.cpp.o.provides.build: CMakeFiles/dnn_system_identification.dir/src/main.cpp.o
 
 
+CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o: CMakeFiles/dnn_system_identification.dir/flags.make
+CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o: ../src/CheckCondition.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o"
+	/usr/bin/x86_64-linux-gnu-g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o -c /home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/CheckCondition.cpp
+
+CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.i"
+	/usr/bin/x86_64-linux-gnu-g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/CheckCondition.cpp > CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.i
+
+CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.s"
+	/usr/bin/x86_64-linux-gnu-g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/CheckCondition.cpp -o CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.s
+
+CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o.requires:
+
+.PHONY : CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o.requires
+
+CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o.provides: CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o.requires
+	$(MAKE) -f CMakeFiles/dnn_system_identification.dir/build.make CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o.provides.build
+.PHONY : CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o.provides
+
+CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o.provides.build: CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o
+
+
 CMakeFiles/dnn_system_identification.dir/src/ControllerMessage.cpp.o: CMakeFiles/dnn_system_identification.dir/flags.make
 CMakeFiles/dnn_system_identification.dir/src/ControllerMessage.cpp.o: ../src/ControllerMessage.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/dnn_system_identification.dir/src/ControllerMessage.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/dnn_system_identification.dir/src/ControllerMessage.cpp.o"
 	/usr/bin/x86_64-linux-gnu-g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/dnn_system_identification.dir/src/ControllerMessage.cpp.o -c /home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/ControllerMessage.cpp
 
 CMakeFiles/dnn_system_identification.dir/src/ControllerMessage.cpp.i: cmake_force
@@ -107,7 +131,7 @@ CMakeFiles/dnn_system_identification.dir/src/ControllerMessage.cpp.o.provides.bu
 
 CMakeFiles/dnn_system_identification.dir/src/IdentificationNode.cpp.o: CMakeFiles/dnn_system_identification.dir/flags.make
 CMakeFiles/dnn_system_identification.dir/src/IdentificationNode.cpp.o: ../src/IdentificationNode.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/dnn_system_identification.dir/src/IdentificationNode.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/dnn_system_identification.dir/src/IdentificationNode.cpp.o"
 	/usr/bin/x86_64-linux-gnu-g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/dnn_system_identification.dir/src/IdentificationNode.cpp.o -c /home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/IdentificationNode.cpp
 
 CMakeFiles/dnn_system_identification.dir/src/IdentificationNode.cpp.i: cmake_force
@@ -131,7 +155,7 @@ CMakeFiles/dnn_system_identification.dir/src/IdentificationNode.cpp.o.provides.b
 
 CMakeFiles/dnn_system_identification.dir/src/ROSUnit_ControlOutputSubscriber.cpp.o: CMakeFiles/dnn_system_identification.dir/flags.make
 CMakeFiles/dnn_system_identification.dir/src/ROSUnit_ControlOutputSubscriber.cpp.o: ../src/ROSUnit_ControlOutputSubscriber.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/dnn_system_identification.dir/src/ROSUnit_ControlOutputSubscriber.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/dnn_system_identification.dir/src/ROSUnit_ControlOutputSubscriber.cpp.o"
 	/usr/bin/x86_64-linux-gnu-g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/dnn_system_identification.dir/src/ROSUnit_ControlOutputSubscriber.cpp.o -c /home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/ROSUnit_ControlOutputSubscriber.cpp
 
 CMakeFiles/dnn_system_identification.dir/src/ROSUnit_ControlOutputSubscriber.cpp.i: cmake_force
@@ -155,7 +179,7 @@ CMakeFiles/dnn_system_identification.dir/src/ROSUnit_ControlOutputSubscriber.cpp
 
 CMakeFiles/dnn_system_identification.dir/src/ROSUnit_OrientationSubscriber.cpp.o: CMakeFiles/dnn_system_identification.dir/flags.make
 CMakeFiles/dnn_system_identification.dir/src/ROSUnit_OrientationSubscriber.cpp.o: ../src/ROSUnit_OrientationSubscriber.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/dnn_system_identification.dir/src/ROSUnit_OrientationSubscriber.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/dnn_system_identification.dir/src/ROSUnit_OrientationSubscriber.cpp.o"
 	/usr/bin/x86_64-linux-gnu-g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/dnn_system_identification.dir/src/ROSUnit_OrientationSubscriber.cpp.o -c /home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/ROSUnit_OrientationSubscriber.cpp
 
 CMakeFiles/dnn_system_identification.dir/src/ROSUnit_OrientationSubscriber.cpp.i: cmake_force
@@ -179,7 +203,7 @@ CMakeFiles/dnn_system_identification.dir/src/ROSUnit_OrientationSubscriber.cpp.o
 
 CMakeFiles/dnn_system_identification.dir/src/ROSUnit_UpdateController.cpp.o: CMakeFiles/dnn_system_identification.dir/flags.make
 CMakeFiles/dnn_system_identification.dir/src/ROSUnit_UpdateController.cpp.o: ../src/ROSUnit_UpdateController.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/dnn_system_identification.dir/src/ROSUnit_UpdateController.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/dnn_system_identification.dir/src/ROSUnit_UpdateController.cpp.o"
 	/usr/bin/x86_64-linux-gnu-g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/dnn_system_identification.dir/src/ROSUnit_UpdateController.cpp.o -c /home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/ROSUnit_UpdateController.cpp
 
 CMakeFiles/dnn_system_identification.dir/src/ROSUnit_UpdateController.cpp.i: cmake_force
@@ -204,6 +228,7 @@ CMakeFiles/dnn_system_identification.dir/src/ROSUnit_UpdateController.cpp.o.prov
 # Object files for target dnn_system_identification
 dnn_system_identification_OBJECTS = \
 "CMakeFiles/dnn_system_identification.dir/src/main.cpp.o" \
+"CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o" \
 "CMakeFiles/dnn_system_identification.dir/src/ControllerMessage.cpp.o" \
 "CMakeFiles/dnn_system_identification.dir/src/IdentificationNode.cpp.o" \
 "CMakeFiles/dnn_system_identification.dir/src/ROSUnit_ControlOutputSubscriber.cpp.o" \
@@ -214,6 +239,7 @@ dnn_system_identification_OBJECTS = \
 dnn_system_identification_EXTERNAL_OBJECTS =
 
 devel/lib/dnn_system_identification/dnn_system_identification: CMakeFiles/dnn_system_identification.dir/src/main.cpp.o
+devel/lib/dnn_system_identification/dnn_system_identification: CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o
 devel/lib/dnn_system_identification/dnn_system_identification: CMakeFiles/dnn_system_identification.dir/src/ControllerMessage.cpp.o
 devel/lib/dnn_system_identification/dnn_system_identification: CMakeFiles/dnn_system_identification.dir/src/IdentificationNode.cpp.o
 devel/lib/dnn_system_identification/dnn_system_identification: CMakeFiles/dnn_system_identification.dir/src/ROSUnit_ControlOutputSubscriber.cpp.o
@@ -241,7 +267,7 @@ devel/lib/dnn_system_identification/dnn_system_identification: /usr/lib/x86_64-l
 devel/lib/dnn_system_identification/dnn_system_identification: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
 devel/lib/dnn_system_identification/dnn_system_identification: /usr/lib/x86_64-linux-gnu/libpython2.7.so
 devel/lib/dnn_system_identification/dnn_system_identification: CMakeFiles/dnn_system_identification.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable devel/lib/dnn_system_identification/dnn_system_identification"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable devel/lib/dnn_system_identification/dnn_system_identification"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/dnn_system_identification.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -250,6 +276,7 @@ CMakeFiles/dnn_system_identification.dir/build: devel/lib/dnn_system_identificat
 .PHONY : CMakeFiles/dnn_system_identification.dir/build
 
 CMakeFiles/dnn_system_identification.dir/requires: CMakeFiles/dnn_system_identification.dir/src/main.cpp.o.requires
+CMakeFiles/dnn_system_identification.dir/requires: CMakeFiles/dnn_system_identification.dir/src/CheckCondition.cpp.o.requires
 CMakeFiles/dnn_system_identification.dir/requires: CMakeFiles/dnn_system_identification.dir/src/ControllerMessage.cpp.o.requires
 CMakeFiles/dnn_system_identification.dir/requires: CMakeFiles/dnn_system_identification.dir/src/IdentificationNode.cpp.o.requires
 CMakeFiles/dnn_system_identification.dir/requires: CMakeFiles/dnn_system_identification.dir/src/ROSUnit_ControlOutputSubscriber.cpp.o.requires

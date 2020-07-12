@@ -25,6 +25,7 @@ class Identification:
         self.__K = -1.0; self.__T = -1.0; self.__tau = -1.0; self.__Kp = -1.0; self.__Kd = -1.0; self.__Ki = -1.0
         self.__system_class = -1
         self.__first_layer_length = 0;
+        self.__identification_done = 0;
 
     def update_dnn_model_and_system(self, dnn_model_path, systems_path):
         self.__dnn_model_path = dnn_model_path
@@ -49,7 +50,7 @@ class Identification:
 
         self.detect_rise_edges(t_time)
 
-        return (self.__Kp, self.__Kd, self.__system_class)
+        return (self.__Kp, self.__Kd, self.__system_class, self.__identification_done)
 
 
     def detect_rise_edges(self, t_time):
@@ -177,6 +178,8 @@ class Identification:
             self.__Kp = temp_system[3] * scaled_gain * 4 / np.pi
             self.__Ki = temp_system[4] * scaled_gain * 4 / np.pi
             self.__Kd = temp_system[5] * scaled_gain * 4 / np.pi
+
+        self.__identification_done = 1;
 
         print("")
         print("CLASS: ", self.__system_class, "KP: ", self.__Kp, "KD: ", self.__Kd, "Scaled Gain: ", scaled_gain)
