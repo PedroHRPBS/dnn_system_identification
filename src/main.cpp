@@ -63,12 +63,19 @@ int main(int argc, char** argv) {
     pitch_identification_node->setDNNModelinPython("/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/inner/model.h5", 
                                                    "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/inner/systems_truth_table.csv");
 
-    IdentificationNode* z_identification_node = new IdentificationNode(control_system::z, 0.265239809785063, true);
+    IdentificationNode* z_identification_node = new IdentificationNode(control_system::z, 0.174232919028851/2, true);
     z_identification_node->setDNNModelinPython("/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/z/model.h5", 
                                                "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/z/systems_truth_table.csv");
 
-    IdentificationNode* x_identification_node = new IdentificationNode(control_system::x, 0.05, false);
-    IdentificationNode* y_identification_node = new IdentificationNode(control_system::y, 0.05, false);
+    IdentificationNode* x_identification_node = new IdentificationNode(control_system::x, 0.1, true); //TODO SWITCH TO FALSE ON FULL ID
+    //WARNING - DO NOT CONSIDER THE GAINS IDENTIFIED FROM THE OUTER LOOP
+    //WARNING - NOT USING THE CORRECT TRUTH TABLE
+    x_identification_node->setDNNModelinPython("/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/12/model.h5", 
+                                               "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/24/systems_truth_table.csv");
+
+    IdentificationNode* y_identification_node = new IdentificationNode(control_system::y, 0.1, true); //TODO SWITCH TO FALSE ON FULL ID
+    y_identification_node->setDNNModelinPython("/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/12/model.h5", 
+                                               "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/24/systems_truth_table.csv");
 
     CheckCondition* check_current_height = new CheckCondition();
     CheckCondition* check_inner_loop = new CheckCondition();
@@ -97,8 +104,8 @@ int main(int argc, char** argv) {
     pitch_identification_node->addCallbackMsgReceiver((MsgReceiver*)y_identification_node, (int)IdentificationNode::unicast_addresses::id_node); 
     roll_identification_node->addCallbackMsgReceiver((MsgReceiver*)check_inner_loop, (int)IdentificationNode::unicast_addresses::id_node);
     pitch_identification_node->addCallbackMsgReceiver((MsgReceiver*)check_inner_loop, (int)IdentificationNode::unicast_addresses::id_node); 
-    check_inner_loop->addCallbackMsgReceiver((MsgReceiver*)x_identification_node);
-    check_inner_loop->addCallbackMsgReceiver((MsgReceiver*)y_identification_node); 
+    // check_inner_loop->addCallbackMsgReceiver((MsgReceiver*)x_identification_node); //TODO UNCOMMENT FOR FULL ID
+    // check_inner_loop->addCallbackMsgReceiver((MsgReceiver*)y_identification_node); //TODO UNCOMMENT FOR FULL ID
     
 
     roll_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr, (int)IdentificationNode::unicast_addresses::ros);

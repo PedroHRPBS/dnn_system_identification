@@ -9,7 +9,7 @@
 class CheckCondition : public MsgEmitter, public MsgReceiver{
 
 private:
-    float _current_height, _min_height = -0.3;
+    float _current_height, _min_height = 0.30;
     bool _roll_id_done = false, _pitch_id_done = false;
 
 public:

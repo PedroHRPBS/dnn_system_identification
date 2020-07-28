@@ -57,7 +57,7 @@ class Identification:
         if len(self.__MRFT_command) > 1:
                 if (self.__MRFT_command[-1] - self.__MRFT_command[-2]) > (1.95 * self.__h_mrft):  #Detecting rise-edge
                         self.__rise_edge_times.append((len(self.__MRFT_command), t_time)) #Tuple (index of rise-edge, time)
-                        print("RISE DETECTED: ", len(self.__rise_edge_times), "at time: ", t_time)
+                        print("CLASS ", self.__h_mrft,"RISE DETECTED: ", len(self.__rise_edge_times), "at time: ", t_time)
 
                         self.get_error_parameters()          
 
@@ -65,8 +65,21 @@ class Identification:
         if len(self.__rise_edge_times) >= 2:
                 signal_start = self.__rise_edge_times[-2][0]
                 signal_end = self.__rise_edge_times[-1][0]     
-                max_peak = max(list(itertools.islice(self.__MRFT_error, signal_start, signal_end)))
-                min_peak = min(list(itertools.islice(self.__MRFT_error, signal_start, signal_end)))
+                error_data = np.array(list(itertools.islice(self.__MRFT_error, signal_start, signal_end)))
+                count_max = 0
+                while True:
+                    max_peak = np.amax(error_data[count_max:])
+                    if np.argmax(error_data[count_max:]) != count_max:
+                        break
+                    count_max += 1
+
+                count_min = -1
+                while True:
+                    min_peak = np.amin(error_data[:count_min])
+                    if np.argmin(error_data[:count_min]) != error_data[:count_min].size - 1:
+                        break
+                    count_min -= 1
+
                 period = self.__rise_edge_times[-1][1] - self.__rise_edge_times[-2][1]
 
                 amplitude = max_peak - min_peak;
@@ -74,21 +87,32 @@ class Identification:
 
                 self.__MRFT_error_params.append((amplitude, center_point, period)) #Params is a tuple (Max peak, Min peak, Period)
 
-                print("self.__MRFT_error_params:", self.__MRFT_error_params[-1])
-                # if (amplitude > 0.01):    #Check for at least 1deg of difference between max and min. This is to avoid flat signal.
+                print("CLASS ", self.__h_mrft, " self.__MRFT_error_params:", self.__MRFT_error_params[-1])
+
                 self.detect_steady_state(signal_start, signal_end)
 
     def detect_steady_state(self, signal_start, signal_end, samples=3):
-        if len(self.__MRFT_error_params) > samples: #Testing consistency of data to detect steady state, the test is done by checking the standard deviation of params
-                                        
-                amplitude_std = np.std([element[0] for element in self.__MRFT_error_params[-samples:]]) #Only get the standard deviation of the last samples (3) events
-                center_point_std = np.std([element[1] for element in self.__MRFT_error_params[-samples:]])
-                period_std = np.std([element[2] for element in self.__MRFT_error_params[-samples:]])
+        if len(self.__MRFT_error_params) >= samples: #Testing consistency of data to detect steady state, the test is done by checking the standard deviation of params
+                
+                last_three_samples = self.__MRFT_error_params[-samples:]
+                last_three_amp = [element[0] for element in last_three_samples]
+                last_three_cp = [element[1] + 1 for element in last_three_samples] #+ 1 to be far from 0 and generate huge numbers on division
+                last_three_period = [element[2] for element in last_three_samples]
 
-                print(amplitude_std, center_point_std, period_std)
+                amplitude_mean = np.mean(last_three_amp) #Only get the standard deviation of the last samples (3) events
+                center_point_mean = abs(np.mean(last_three_cp)) 
 
-                if amplitude_std < 0.03 and center_point_std < 0.03 and period_std < 0.03: #0.02 came from analysis of real data example where the algorithm was successful
-                        print("Steady State DETECTED")
+                amplitude_std = np.std(last_three_amp) #Only get the standard deviation of the last samples (3) events
+                center_point_std = np.std(last_three_cp)
+                period_std = np.std(last_three_period)
+
+                amp_tolerance = amplitude_std / amplitude_mean;
+                center_point_tolerance = center_point_std / center_point_mean;
+
+                print(amp_tolerance, center_point_tolerance, period_std)
+
+                if amp_tolerance < 0.06 and center_point_tolerance < 0.015 and period_std < 0.06:
+                        print("CLASS ", self.__h_mrft,"Steady State DETECTED")
                         control_timeseries = list(itertools.islice(self.__MRFT_command, signal_start, signal_end-1)) #-1 to remove the last rise edge
                         error_timeseries = list(itertools.islice(self.__MRFT_error, signal_start, signal_end-1))
                         timeseries = list(itertools.islice(self.__MRFT_time, signal_start, signal_end-1))
@@ -98,6 +122,14 @@ class Identification:
                         # print(control_timeseries)
                         # print(error_timeseries)
                         # print(timeseries)
+                        np.set_printoptions(threshold=sys.maxsize)
+                        a = [str(x) for x in error_timeseries]
+                        print(','.join(a))
+                        b = [str(x) for x in control_timeseries]
+                        print(','.join(b))
+                        c = [str(x-timeseries[0]) for x in timeseries]
+                        print(','.join(c))
+                       
 
                         self.interpolate_data(control_timeseries, error_timeseries, timeseries)
 
@@ -122,16 +154,19 @@ class Identification:
 
         # print(control_interp)
         # print(error_interp)
+        # print("interpolate_data")
+
 
         self.pre_process_data(control_interp, error_interp)
 
     def pre_process_data(self, control_timeseries, error_timeseries):
+
         sample_size = self.__first_layer_length/2 #TODO This should be different for Z
         h_mrft_control = (max(control_timeseries)-min(control_timeseries)) / 2.0
         h_mrft_error = (max(error_timeseries)-min(error_timeseries)) / 2.0
 
         SCALED_GAIN = h_mrft_control / h_mrft_error
-
+        
         # Zero center
         offset_control = ((max(control_timeseries) + min(control_timeseries)) / 2.0)
         offset_error = ((max(error_timeseries) + min(error_timeseries)) / 2.0)
@@ -147,15 +182,27 @@ class Identification:
         # Zero-padding
         normalized_control_timeseries = np.zeros(sample_size)
         normalized_error_timeseries = np.zeros(sample_size)
-        normalized_control_timeseries[-len(control_timeseries_normalized):] = control_timeseries_normalized
-        normalized_error_timeseries[-len(error_timeseries_normalized):] = error_timeseries_normalized
 
-        # print(normalized_control_timeseries)
-        # print(normalized_error_timeseries)
+        if(len(control_timeseries_normalized) < sample_size):
+            normalized_control_timeseries[-len(control_timeseries_normalized):] = control_timeseries_normalized
 
-        input_layer = np.concatenate((normalized_error_timeseries, normalized_control_timeseries), axis=0)
+            normalized_error_timeseries[-len(error_timeseries_normalized):] = error_timeseries_normalized
 
-        self.dnn_classify(input_layer, SCALED_GAIN)
+            # np.set_printoptions(threshold=sys.maxsize)
+            # a = [str(x) for x in normalized_error_timeseries]
+            # print(','.join(a))
+            # print(normalized_error_timeseries)
+
+            input_layer = np.concatenate((normalized_error_timeseries, normalized_control_timeseries), axis=0)
+
+            # np.set_printoptions(threshold=sys.maxsize)
+            # a = [str(x) for x in input_layer]
+            # print(','.join(a))
+            
+            self.dnn_classify(input_layer, SCALED_GAIN)
+        else:
+            print("Steady State DISCARTED")
+
 
     def dnn_classify(self, input_layer, scaled_gain):
         print("DNN CLASSIFICATION")

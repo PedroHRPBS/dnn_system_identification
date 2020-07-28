@@ -1,3 +1,7 @@
+import sys
+if not hasattr(sys, 'argv'):
+        sys.argv  =  ['']
+
 import numpy as np
 # Solution found at https://answers.ros.org/question/289855/import-tensorflow-in-ros-kinetic/ by Oscar Pang
 import tensorflow as tf
@@ -14,7 +18,7 @@ for filename in filenames: # loop through all the files and folders
         result.append(filename)
         
 result.sort()
-
+print(result[0])
 for folder in result[:-1]:
 
     #Load data from matlab file
@@ -24,7 +28,7 @@ for folder in result[:-1]:
     fc_3_params = [mat['fc_3_w'].T, mat['fc_3_b']]
     bn_1_params = [mat['bn_1_scale'], mat['bn_1_offset'], mat['bn_1_mean'], mat['bn_1_variance']]
     bn_2_params = [mat['bn_2_scale'], mat['bn_2_offset'], mat['bn_2_mean'], mat['bn_2_variance']]
-    systems = mat['systems_classes']
+    systems = mat['systems_classes'] #systems for z
 
     #Defining layers
     fc_layer_1 = tf.keras.layers.Dense(np.array(fc_1_params[0]).shape[1],input_shape=(1,np.array(fc_1_params[0]).shape[0]))
