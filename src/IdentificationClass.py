@@ -35,7 +35,7 @@ class Identification:
         self.__dnn_model = tf.keras.models.load_model(self.__dnn_model_path)
         self.__systems = np.loadtxt(self.__systems_path, delimiter=',')
         self.__first_layer_length = np.shape(self.__dnn_model.inputs[0])[2];
-
+        print(self.__first_layer_length)
     def get_MRFT_amp(self):
         return self.__h_mrft
 
@@ -111,7 +111,7 @@ class Identification:
 
                 print(amp_tolerance, center_point_tolerance, period_std)
 
-                if amp_tolerance < 0.06 and center_point_tolerance < 0.015 and period_std < 0.06:
+                if amp_tolerance < 0.06 and center_point_tolerance < 0.06 and period_std < 0.06:
                         print("CLASS ", self.__h_mrft,"Steady State DETECTED")
                         control_timeseries = list(itertools.islice(self.__MRFT_command, signal_start, signal_end-1)) #-1 to remove the last rise edge
                         error_timeseries = list(itertools.islice(self.__MRFT_error, signal_start, signal_end-1))
@@ -217,7 +217,7 @@ class Identification:
             self.__Kp = temp_system[7] * scaled_gain * 4 / np.pi
             self.__Kd = temp_system[8] * scaled_gain * 4 / np.pi #TODO This should be different for Z
        
-        elif self.__first_layer_length == 5000:
+        else:
             # each row is a process, column are: K T tau P I D
             self.__K = temp_system[0]
             self.__T = temp_system[1]

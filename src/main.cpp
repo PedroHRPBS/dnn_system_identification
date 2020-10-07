@@ -21,11 +21,7 @@ int main(int argc, char** argv) {
     ros::init(argc, argv, "dnn_sys_id_node");
     ros::NodeHandle nh;
     ros::Rate rate(200);
-    //TODO add enable service
-    //TODO update PID
     ROSUnit* ros_controloutput_sub = new ROSUnit_ControlOutputSubscriber(nh);
-    //TODO remove this, it's only for testing. I have no bag file with the new topic for roll
-    ROSUnit* ros_orientation_sub = new ROSUnit_OrientationSubscriber(nh);
     ROSUnit* ros_updt_ctr = new ROSUnit_UpdateController(nh);
 
     ROSUnit_Factory ROSUnit_Factory_main{nh};
@@ -55,25 +51,25 @@ int main(int argc, char** argv) {
                                                                            "/dnn_confirmation");
 
 
-    IdentificationNode* roll_identification_node = new IdentificationNode(control_system::roll, 0.04, true);
+    IdentificationNode* roll_identification_node = new IdentificationNode(control_system::roll, 0.04, true); //TODO SWITCH TO TRUE ON FULL ID
     roll_identification_node->setDNNModelinPython("/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/inner/model.h5", 
                                                   "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/inner/systems_truth_table.csv");
 
-    IdentificationNode* pitch_identification_node = new IdentificationNode(control_system::pitch, 0.04, true);
+    IdentificationNode* pitch_identification_node = new IdentificationNode(control_system::pitch, 0.04, true); //TODO SWITCH TO TRUE ON FULL ID
     pitch_identification_node->setDNNModelinPython("/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/inner/model.h5", 
                                                    "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/inner/systems_truth_table.csv");
 
-    IdentificationNode* z_identification_node = new IdentificationNode(control_system::z, 0.174232919028851/2, true);
+    IdentificationNode* z_identification_node = new IdentificationNode(control_system::z, 0.107461735722299, true); //TODO SWITCH TO TRUE ON FULL ID
     z_identification_node->setDNNModelinPython("/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/z/model.h5", 
                                                "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/z/systems_truth_table.csv");
 
-    IdentificationNode* x_identification_node = new IdentificationNode(control_system::x, 0.1, true); //TODO SWITCH TO FALSE ON FULL ID
+    IdentificationNode* x_identification_node = new IdentificationNode(control_system::x, 0.1, false); //TODO SWITCH TO FALSE ON FULL ID
     //WARNING - DO NOT CONSIDER THE GAINS IDENTIFIED FROM THE OUTER LOOP
     //WARNING - NOT USING THE CORRECT TRUTH TABLE
     x_identification_node->setDNNModelinPython("/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/12/model.h5", 
                                                "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/24/systems_truth_table.csv");
 
-    IdentificationNode* y_identification_node = new IdentificationNode(control_system::y, 0.1, true); //TODO SWITCH TO FALSE ON FULL ID
+    IdentificationNode* y_identification_node = new IdentificationNode(control_system::y, 0.1, false); //TODO SWITCH TO FALSE ON FULL ID
     y_identification_node->setDNNModelinPython("/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/12/model.h5", 
                                                "/home/pedrohrpbs/catkin_ws_tensorflow/src/dnn_system_identification/src/DNNs/24/systems_truth_table.csv");
 
@@ -83,9 +79,9 @@ int main(int argc, char** argv) {
 
     //This part is to enable roll, pitch and Z identification only above a certain threshold.
     rosunit_z_provider->addCallbackMsgReceiver((MsgReceiver*)check_current_height);
-    check_current_height->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);
-    check_current_height->addCallbackMsgReceiver((MsgReceiver*)pitch_identification_node);
-    check_current_height->addCallbackMsgReceiver((MsgReceiver*)z_identification_node);
+    check_current_height->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node); //TODO UNCOMMENT FOR FULL ID
+    check_current_height->addCallbackMsgReceiver((MsgReceiver*)pitch_identification_node); //TODO UNCOMMENT FOR FULL ID
+    check_current_height->addCallbackMsgReceiver((MsgReceiver*)z_identification_node); //TODO UNCOMMENT FOR FULL ID
 
     ros_controloutput_sub->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);
     rosunit_roll_provider->addCallbackMsgReceiver((MsgReceiver*)roll_identification_node);   
@@ -104,8 +100,8 @@ int main(int argc, char** argv) {
     pitch_identification_node->addCallbackMsgReceiver((MsgReceiver*)y_identification_node, (int)IdentificationNode::unicast_addresses::id_node); 
     roll_identification_node->addCallbackMsgReceiver((MsgReceiver*)check_inner_loop, (int)IdentificationNode::unicast_addresses::id_node);
     pitch_identification_node->addCallbackMsgReceiver((MsgReceiver*)check_inner_loop, (int)IdentificationNode::unicast_addresses::id_node); 
-    // check_inner_loop->addCallbackMsgReceiver((MsgReceiver*)x_identification_node); //TODO UNCOMMENT FOR FULL ID
-    // check_inner_loop->addCallbackMsgReceiver((MsgReceiver*)y_identification_node); //TODO UNCOMMENT FOR FULL ID
+    check_inner_loop->addCallbackMsgReceiver((MsgReceiver*)x_identification_node); //TODO UNCOMMENT FOR FULL ID
+    check_inner_loop->addCallbackMsgReceiver((MsgReceiver*)y_identification_node); //TODO UNCOMMENT FOR FULL ID
     
 
     roll_identification_node->addCallbackMsgReceiver((MsgReceiver*)ros_updt_ctr, (int)IdentificationNode::unicast_addresses::ros);

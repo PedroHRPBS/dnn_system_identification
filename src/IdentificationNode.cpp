@@ -1,5 +1,13 @@
 #include "IdentificationNode.hpp"
 #include "common_srv/Timer.hpp"
+#include <fstream>
+
+std::ofstream write_data_roll("/home/pedrohrpbs/catkin_ws_tensorflow//roll_data.txt");
+std::ofstream write_data_pitch("/home/pedrohrpbs/catkin_ws_tensorflow//pitch_data.txt"); 
+std::ofstream write_data_x("/home/pedrohrpbs/catkin_ws_tensorflow//x_data.txt"); 
+std::ofstream write_data_y("/home/pedrohrpbs/catkin_ws_tensorflow//y_data.txt"); 
+std::ofstream write_data_z("/home/pedrohrpbs/catkin_ws_tensorflow//z_data.txt"); 
+
 
 Timer tempo;
 Timer tempo2;
@@ -37,6 +45,33 @@ void IdentificationNode::initializePython(){
 
 void IdentificationNode::callPython(double t_pv, double t_u){
 
+    if(_cs_type == control_system::roll){
+        write_data_roll << std::setprecision(6) << t_pv << ", ";
+        write_data_roll << std::setprecision(6) << t_u << ", ";
+        write_data_roll << std::setprecision(16) << ros::Time::now().toSec() << "\n";
+
+    }else if (_cs_type == control_system::pitch)
+    {
+        write_data_pitch << std::setprecision(6) << t_pv << ", ";
+        write_data_pitch << std::setprecision(6) << t_u << ", ";
+        write_data_pitch << std::setprecision(16) << ros::Time::now().toSec() << "\n";
+    }else if (_cs_type == control_system::x)
+    {
+        write_data_x << std::setprecision(6) << t_pv << ", ";
+        write_data_x << std::setprecision(6) << t_u << ", ";
+        write_data_x << std::setprecision(16) << ros::Time::now().toSec() << "\n";
+    }else if (_cs_type == control_system::y)
+    {
+        write_data_y << std::setprecision(6) << t_pv << ", ";
+        write_data_y << std::setprecision(6) << t_u << ", ";
+        write_data_y << std::setprecision(16) << ros::Time::now().toSec() << "\n";
+    }else if (_cs_type == control_system::z)
+    {
+        write_data_z << std::setprecision(6) << t_pv << ", ";
+        write_data_z << std::setprecision(6) << t_u << ", ";
+        write_data_z << std::setprecision(16) << ros::Time::now().toSec() << "\n";
+    }
+    /*
     if(_enabled && _identification_done == 0){
         PyObject* py_pv = PyFloat_FromDouble(t_pv);
         PyObject* py_u = PyFloat_FromDouble(t_u);
@@ -82,6 +117,7 @@ void IdentificationNode::callPython(double t_pv, double t_u){
         }
 
     }
+    */
 }
 
 void IdentificationNode::setDNNModelinPython(const char* t_dnn_model_path, const char* t_system_classes_path){
